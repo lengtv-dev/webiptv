@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Crown, Check, QrCode, Sparkles, ShieldCheck, Upload, AlertCircle, ExternalLink } from 'lucide-react';
+import { X, Crown, Check, QrCode, Sparkles, ShieldCheck, Upload, AlertCircle } from 'lucide-react';
 import { VIP_PACKAGES } from '../services/api';
 import { VipPackage } from '../types';
 
@@ -68,31 +68,6 @@ export const VipModal: React.FC<VipModalProps> = ({
 
         {/* Modal Body */}
         <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
-          {/* Official Website Banner */}
-          <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/20 via-orange-500/15 to-neutral-900 border border-amber-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
-            <div className="space-y-0.5">
-              <div className="flex items-center gap-2">
-                <Crown className="w-4 h-4 text-amber-400" />
-                <span className="text-sm font-bold text-amber-300">
-                  เว็บไซต์ทางการสำหรับสมัครแพ็กเกจสมาชิก
-                </span>
-              </div>
-              <p className="text-xs text-neutral-300">
-                สมัครสมาชิก ต่ออายุ หรือดูโปรโมชั่นพิเศษล่าสุดได้โดยตรงที่{' '}
-                <span className="font-semibold text-white underline">https://playid.hstn.me</span>
-              </p>
-            </div>
-            <a
-              href="https://playid.hstn.me"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow-md shadow-amber-500/20 transition-all shrink-0 active:scale-95"
-            >
-              <span>เปิดเว็บไซต์ playid.hstn.me</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </div>
-
           {!showSlipUpload ? (
             <>
               {/* Packages Cards Grid */}

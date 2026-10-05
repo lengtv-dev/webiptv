@@ -89,26 +89,26 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
       <div
         id="login-glass-card"
-        className="relative w-full max-w-lg bg-[#0a0a0a]/95 border border-[#222] rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-2xl text-neutral-100 z-10 space-y-6"
+        className="relative w-full max-w-lg bg-neutral-900/90 border border-neutral-700/60 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-2xl text-neutral-100 z-10 space-y-6"
       >
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FF6321] to-[#D4145A] text-white shadow-lg shadow-[#FF6321]/30 mb-2">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-white shadow-lg shadow-emerald-500/30 mb-2">
             <Tv className="w-8 h-8" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black italic tracking-tighter text-white">
-            PLAY<span className="text-[#FF6321]">ID</span> IPTV PLAYER
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-neutral-200 to-emerald-400 bg-clip-text text-transparent">
+            PlayID IPTV Player
           </h1>
-          <p className="text-xs sm:text-sm text-[#777] font-medium">
+          <p className="text-xs sm:text-sm text-neutral-400">
             ระบบเครื่องเล่น Xtream Codes Web Player & Stream Proxy
           </p>
 
           {/* Cinematic Movie Backdrop Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#141414] border border-[#222] text-xs text-[#bbb] mt-2">
-            <Star className="w-3.5 h-3.5 fill-[#FF6321] text-[#FF6321]" />
-            <span className="font-bold text-white">{currentMovie.title}</span>
-            <span className="text-[#444]">•</span>
-            <span className="text-[#FF6321] font-bold">{currentMovie.tag}</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-800/80 border border-neutral-700/60 text-xs text-neutral-300 mt-2">
+            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+            <span className="font-semibold text-white">{currentMovie.title}</span>
+            <span className="text-neutral-500">•</span>
+            <span className="text-emerald-400">{currentMovie.tag}</span>
           </div>
         </div>
 
@@ -124,8 +124,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Anyname */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-[#888] flex items-center gap-1.5 uppercase tracking-wider text-[10px]">
-              <Tag className="w-3.5 h-3.5 text-[#FF6321]" />
+            <label className="text-xs font-semibold text-neutral-300 flex items-center gap-1.5">
+              <Tag className="w-3.5 h-3.5 text-emerald-400" />
               <span>ชื่อโปรไฟล์ (Any Name)</span>
             </label>
             <input
@@ -134,14 +134,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               value={anyname}
               onChange={(e) => setAnyname(e.target.value)}
               placeholder="เช่น บ้าน VIP หรือ ห้องนอน"
-              className="w-full px-4 py-2.5 rounded-xl bg-[#111] border border-[#222] focus:border-[#FF6321] focus:ring-1 focus:ring-[#FF6321] text-sm text-white placeholder-[#555] transition-all outline-none font-medium"
+              className="w-full px-4 py-2.5 rounded-xl bg-neutral-950/70 border border-neutral-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-sm text-white placeholder-neutral-500 transition-all outline-none"
             />
           </div>
 
           {/* Server URL */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-[#888] flex items-center gap-1.5 uppercase tracking-wider text-[10px]">
-              <Server className="w-3.5 h-3.5 text-[#FF6321]" />
+            <label className="text-xs font-semibold text-neutral-300 flex items-center gap-1.5">
+              <Server className="w-3.5 h-3.5 text-emerald-400" />
               <span>URL เซิร์ฟเวอร์ Xtream Codes (Server URL)</span>
             </label>
             <input
@@ -151,15 +151,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               onChange={(e) => setServerUrl(e.target.value)}
               required
               placeholder="http://103.114.203.129:8080"
-              className="w-full px-4 py-2.5 rounded-xl bg-[#111] border border-[#222] focus:border-[#FF6321] focus:ring-1 focus:ring-[#FF6321] text-sm font-mono text-[#00FF00] placeholder-[#555] transition-all outline-none"
+              className="w-full px-4 py-2.5 rounded-xl bg-neutral-950/70 border border-neutral-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-sm font-mono text-white placeholder-neutral-500 transition-all outline-none"
             />
           </div>
 
           {/* Username & Password */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#888] flex items-center gap-1.5 uppercase tracking-wider text-[10px]">
-                <User className="w-3.5 h-3.5 text-[#FF6321]" />
+              <label className="text-xs font-semibold text-neutral-300 flex items-center gap-1.5">
+                <User className="w-3.5 h-3.5 text-emerald-400" />
                 <span>ชื่อผู้ใช้ (Username)</span>
               </label>
               <input
@@ -169,13 +169,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 placeholder="playidtv2535"
-                className="w-full px-4 py-2.5 rounded-xl bg-[#111] border border-[#222] focus:border-[#FF6321] focus:ring-1 focus:ring-[#FF6321] text-sm text-white placeholder-[#555] transition-all outline-none font-medium"
+                className="w-full px-4 py-2.5 rounded-xl bg-neutral-950/70 border border-neutral-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-sm text-white placeholder-neutral-500 transition-all outline-none"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#888] flex items-center gap-1.5 uppercase tracking-wider text-[10px]">
-                <Lock className="w-3.5 h-3.5 text-[#FF6321]" />
+              <label className="text-xs font-semibold text-neutral-300 flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-emerald-400" />
                 <span>รหัสผ่าน (Password)</span>
               </label>
               <input
@@ -185,25 +185,25 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="12345"
-                className="w-full px-4 py-2.5 rounded-xl bg-[#111] border border-[#222] focus:border-[#FF6321] focus:ring-1 focus:ring-[#FF6321] text-sm text-white placeholder-[#555] transition-all outline-none font-medium"
+                className="w-full px-4 py-2.5 rounded-xl bg-neutral-950/70 border border-neutral-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-sm text-white placeholder-neutral-500 transition-all outline-none"
               />
             </div>
           </div>
 
           {/* Remember Me */}
           <div className="flex items-center justify-between pt-1">
-            <label className="flex items-center gap-2 cursor-pointer text-xs text-[#aaa] select-none font-medium">
+            <label className="flex items-center gap-2 cursor-pointer text-xs text-neutral-300 select-none">
               <input
                 id="login-remember-checkbox"
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="w-4 h-4 rounded bg-black border-[#333] text-[#FF6321] focus:ring-[#FF6321]"
+                className="w-4 h-4 rounded bg-neutral-950 border-neutral-700 text-emerald-500 focus:ring-emerald-500"
               />
-              <span>จดจำการเข้าสู่ระบบบนเครื่องนี้</span>
+              <span>จดจำการเข้าสู่ระบบบนเครื่องนี้ (Remember Me)</span>
             </label>
 
-            <span className="text-[11px] text-[#00FF00] font-bold flex items-center gap-1">
+            <span className="text-[11px] text-emerald-400 font-semibold flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5" /> บัญชี VIP พร้อมใช้งาน
             </span>
           </div>
@@ -213,11 +213,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             id="login-submit-btn"
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#FF6321] to-[#D4145A] hover:opacity-90 active:scale-[0.99] text-white font-black text-sm shadow-xl shadow-[#FF6321]/25 flex items-center justify-center gap-2 transition-all disabled:opacity-60 uppercase tracking-wider"
+            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-[0.99] text-neutral-950 font-bold text-sm shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-2 transition-all disabled:opacity-60"
           >
             {loading ? (
               <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-neutral-950 border-t-transparent rounded-full animate-spin" />
                 <span>กำลังตรวจสอบสิทธิ์บัญชี...</span>
               </>
             ) : (
@@ -230,7 +230,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         </form>
 
         {/* Footer info note */}
-        <div className="pt-2 border-t border-[#1a1a1a] flex items-center justify-between text-[10px] font-mono text-[#666]">
+        <div className="pt-2 border-t border-neutral-800/80 flex items-center justify-between text-[11px] text-neutral-500">
           <span>ค่าเริ่มต้น: 103.114.203.129:8080</span>
           <span>Xtream API v2 + Stream Proxy</span>
         </div>

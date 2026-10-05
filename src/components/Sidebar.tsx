@@ -10,7 +10,6 @@ import {
   Info,
   Server,
   Download,
-  ExternalLink,
 } from 'lucide-react';
 import { XtreamAuthResponse, XtreamCredentials } from '../types';
 import { getM3uPlaylistExportUrl } from '../services/api';
@@ -154,39 +153,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
               ฟังก์ชันพิเศษ
             </span>
 
-            <a
+            <button
               id="sidebar-sports-btn"
-              href="https://playid.hstn.me/maintv/tv-ball.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-neutral-300 hover:text-white hover:bg-neutral-800/70 transition-all group"
+              onClick={onOpenSports}
+              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-neutral-300 hover:text-white hover:bg-neutral-800/70 transition-all group"
             >
-              <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
-                <div className="text-left leading-tight">
-                  <div>ตารางถ่ายทอดสดกีฬา</div>
-                  <div className="text-[10px] text-neutral-500">playid.hstn.me/maintv/tv-ball.html</div>
-                </div>
+              <Calendar className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
+              <div className="text-left leading-tight">
+                <div>ตารางถ่ายทอดสดกีฬา</div>
+                <div className="text-[10px] text-neutral-500">Live Sports Fixtures</div>
               </div>
-              <ExternalLink className="w-4 h-4 text-neutral-500 group-hover:text-emerald-400 transition-colors" />
-            </a>
+            </button>
 
-            <a
+            <button
               id="sidebar-vip-btn"
-              href="https://playid.hstn.me"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-amber-300 hover:text-amber-200 hover:bg-amber-500/10 transition-all group"
+              onClick={onOpenVip}
+              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-amber-300 hover:text-amber-200 hover:bg-amber-500/10 transition-all group"
             >
-              <div className="flex items-center gap-3">
-                <Crown className="w-5 h-5 text-amber-400 group-hover:scale-110 transition-transform" />
-                <div className="text-left leading-tight">
-                  <div>แพ็กเกจสมาชิก</div>
-                  <div className="text-[10px] text-amber-500/80">playid.hstn.me</div>
-                </div>
+              <Crown className="w-5 h-5 text-amber-400 group-hover:scale-110 transition-transform" />
+              <div className="text-left leading-tight">
+                <div>แพ็กเกจสมาชิก VIP</div>
+                <div className="text-[10px] text-amber-500/80">PromptPay QR Code</div>
               </div>
-              <ExternalLink className="w-4 h-4 text-amber-500/60 group-hover:text-amber-400 transition-colors" />
-            </a>
+            </button>
 
             {creds && (
               <a

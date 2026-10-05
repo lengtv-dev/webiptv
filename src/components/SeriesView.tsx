@@ -65,44 +65,44 @@ export const SeriesView: React.FC<SeriesViewProps> = ({
   return (
     <div className="space-y-5 animate-fadeIn pb-24 md:pb-12">
       {/* Header & Categories */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-2xl bg-[#FF6321]/15 text-[#FF6321] border border-[#FF6321]/30 flex items-center justify-center font-black shadow-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center">
               <Tv className="w-4 h-4" />
             </div>
-            <h2 className="text-xl sm:text-2xl font-black italic uppercase tracking-tighter text-white">
-              ซีรีส์และรายการชุด <span className="text-[#FF6321]">(Series)</span>
+            <h2 className="text-xl font-bold text-white">
+              ซีรีส์และรายการชุด (Series)
             </h2>
-            <span className="text-xs font-mono font-bold text-[#888]">
-              [{filteredSeries.length} TITLES]
+            <span className="text-xs text-neutral-400 font-medium">
+              ({filteredSeries.length} เรื่อง)
             </span>
           </div>
 
           <div className="flex items-center gap-2">
             {/* Sort Dropdown */}
-            <div className="flex items-center gap-1.5 bg-[#111] border border-[#222] rounded-full px-3.5 py-1.5 text-xs text-[#bbb]">
-              <SlidersHorizontal className="w-3.5 h-3.5 text-[#FF6321]" />
+            <div className="flex items-center gap-1 bg-neutral-900 border border-neutral-800 rounded-xl px-2.5 py-1 text-xs text-neutral-300">
+              <SlidersHorizontal className="w-3.5 h-3.5 text-neutral-400" />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="bg-transparent text-[#e0e0e0] outline-none cursor-pointer text-xs font-bold"
+                className="bg-transparent text-neutral-200 outline-none cursor-pointer"
               >
-                <option value="default" className="bg-[#111] text-white">เรียงล่าสุด</option>
-                <option value="rating" className="bg-[#111] text-white">คะแนนสูงสุด (IMDb)</option>
-                <option value="name" className="bg-[#111] text-white">ชื่อ ก-ฮ / A-Z</option>
+                <option value="default" className="bg-neutral-900 text-white">เรียงล่าสุด</option>
+                <option value="rating" className="bg-neutral-900 text-white">คะแนนสูงสุด</option>
+                <option value="name" className="bg-neutral-900 text-white">ชื่อ ก-ฮ / A-Z</option>
               </select>
             </div>
 
             {/* Quick search */}
-            <div className="relative w-full sm:w-60">
-              <Search className="w-3.5 h-3.5 text-[#666] absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <div className="relative w-full sm:w-56">
+              <Search className="w-3.5 h-3.5 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={localSearch}
                 onChange={(e) => setLocalSearch(e.target.value)}
                 placeholder="ค้นหาชื่อซีรีส์..."
-                className="w-full pl-9 pr-4 py-1.5 rounded-full bg-[#111] border border-[#222] text-xs text-[#e0e0e0] placeholder-[#555] outline-none focus:border-[#FF6321] focus:ring-1 focus:ring-[#FF6321]"
+                className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs text-neutral-200 outline-none focus:border-purple-500"
               />
             </div>
           </div>
@@ -112,13 +112,13 @@ export const SeriesView: React.FC<SeriesViewProps> = ({
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           <button
             onClick={() => onSelectCategory('all')}
-            className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
               activeCategoryId === 'all'
-                ? 'bg-[#FF6321] text-black shadow-[0_0_15px_rgba(255,99,33,0.35)]'
-                : 'bg-[#111] text-[#888] hover:text-white hover:bg-[#1a1a1a] border border-[#222]'
+                ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/30 font-bold'
+                : 'bg-neutral-900/80 text-neutral-300 hover:bg-neutral-800 border border-neutral-800'
             }`}
           >
-            ทุกหมวดหมู่ (ALL)
+            ทุกหมวดหมู่ (All)
           </button>
 
           {visibleCategories.map((cat) => {
@@ -127,10 +127,10 @@ export const SeriesView: React.FC<SeriesViewProps> = ({
               <button
                 key={cat.category_id}
                 onClick={() => onSelectCategory(cat.category_id)}
-                className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                   isActive
-                    ? 'bg-[#FF6321] text-black shadow-[0_0_15px_rgba(255,99,33,0.35)]'
-                    : 'bg-[#111] text-[#888] hover:text-white hover:bg-[#1a1a1a] border border-[#222]'
+                    ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/30 font-bold'
+                    : 'bg-neutral-900/80 text-neutral-300 hover:bg-neutral-800 border border-neutral-800'
                 }`}
               >
                 {cat.category_name}
@@ -142,9 +142,9 @@ export const SeriesView: React.FC<SeriesViewProps> = ({
 
       {/* Series Grid */}
       {loading ? (
-        <div className="py-24 flex flex-col items-center justify-center gap-3 text-[#888]">
-          <div className="w-10 h-10 border-3 border-[#FF6321] border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm font-bold uppercase tracking-wider">กำลังโหลดรายการซีรีส์จากเซิร์ฟเวอร์...</p>
+        <div className="py-24 flex flex-col items-center justify-center gap-3 text-neutral-400">
+          <div className="w-10 h-10 border-3 border-purple-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm font-medium">กำลังโหลดรายการซีรีส์จากเซิร์ฟเวอร์...</p>
         </div>
       ) : filteredSeries.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">

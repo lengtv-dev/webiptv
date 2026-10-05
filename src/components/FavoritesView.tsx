@@ -41,20 +41,20 @@ export const FavoritesView: React.FC<FavoritesViewProps> = ({
   return (
     <div className="space-y-6 animate-fadeIn pb-24 md:pb-12">
       {/* Header & Sub-filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#1a1a1a]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-800">
         <div>
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-2xl bg-[#D4145A]/15 text-[#D4145A] border border-[#D4145A]/30 flex items-center justify-center shadow-sm">
-              <Heart className="w-4 h-4 fill-current" />
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center">
+              <Heart className="w-5 h-5 fill-current" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-black italic uppercase tracking-tighter text-white">
-              รายการโปรดของคุณ <span className="text-[#D4145A]">(Favorites)</span>
+            <h1 className="text-xl sm:text-2xl font-bold text-white">
+              รายการโปรดของคุณ (Favorites)
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-[#D4145A] text-white shadow-[0_0_10px_rgba(212,20,90,0.4)]">
+            <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-pink-600 text-white">
               {favorites.length} รายการ
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-[#777] mt-1 font-medium">
+          <p className="text-xs sm:text-sm text-neutral-400 mt-1">
             บันทึกช่องทีวี ภาพยนตร์ และซีรีส์ที่คุณชื่นชอบไว้เปิดดูได้สะดวกรวดเร็ว
           </p>
         </div>
@@ -63,7 +63,7 @@ export const FavoritesView: React.FC<FavoritesViewProps> = ({
         {favorites.length > 0 && (
           <button
             onClick={onClearAll}
-            className="self-start sm:self-auto flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#111] hover:bg-red-950/60 hover:text-red-400 text-[#888] text-xs font-bold transition-all border border-[#222]"
+            className="self-start sm:self-auto flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-neutral-800/80 hover:bg-red-950 hover:text-red-400 text-neutral-400 text-xs transition-all border border-neutral-700/80"
           >
             <Trash2 className="w-3.5 h-3.5" />
             <span>ล้างรายการโปรดทั้งหมด</span>
@@ -73,13 +73,13 @@ export const FavoritesView: React.FC<FavoritesViewProps> = ({
 
       {/* Filter Tabs & Search Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
           <button
             onClick={() => setFilterType('all')}
-            className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
               filterType === 'all'
-                ? 'bg-[#FF6321] text-black shadow-[0_0_15px_rgba(255,99,33,0.35)]'
-                : 'bg-[#111] text-[#888] hover:text-white border border-[#222]'
+                ? 'bg-neutral-100 text-neutral-950 font-bold shadow'
+                : 'bg-neutral-800/80 text-neutral-300 hover:bg-neutral-700'
             }`}
           >
             ทั้งหมด ({favorites.length})
@@ -87,38 +87,38 @@ export const FavoritesView: React.FC<FavoritesViewProps> = ({
 
           <button
             onClick={() => setFilterType('live')}
-            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
               filterType === 'live'
-                ? 'bg-[#FF6321] text-black shadow-[0_0_15px_rgba(255,99,33,0.35)]'
-                : 'bg-[#111] text-[#888] hover:text-white border border-[#222]'
+                ? 'bg-red-600 text-white font-bold shadow'
+                : 'bg-neutral-800/80 text-neutral-300 hover:bg-neutral-700'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            <span>ทีวีสด ({liveCount})</span>
+            <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
+            <span>🔴 ทีวีสด ({liveCount})</span>
           </button>
 
           <button
             onClick={() => setFilterType('vod')}
-            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
               filterType === 'vod'
-                ? 'bg-[#FF6321] text-black shadow-[0_0_15px_rgba(255,99,33,0.35)]'
-                : 'bg-[#111] text-[#888] hover:text-white border border-[#222]'
+                ? 'bg-blue-600 text-white font-bold shadow'
+                : 'bg-neutral-800/80 text-neutral-300 hover:bg-neutral-700'
             }`}
           >
             <Film className="w-3.5 h-3.5" />
-            <span>หนัง VOD ({vodCount})</span>
+            <span>🎬 หนัง VOD ({vodCount})</span>
           </button>
 
           <button
             onClick={() => setFilterType('series')}
-            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
               filterType === 'series'
-                ? 'bg-[#FF6321] text-black shadow-[0_0_15px_rgba(255,99,33,0.35)]'
-                : 'bg-[#111] text-[#888] hover:text-white border border-[#222]'
+                ? 'bg-purple-600 text-white font-bold shadow'
+                : 'bg-neutral-800/80 text-neutral-300 hover:bg-neutral-700'
             }`}
           >
             <Tv className="w-3.5 h-3.5" />
-            <span>ซีรีส์ ({seriesCount})</span>
+            <span>📺 ซีรีส์ ({seriesCount})</span>
           </button>
         </div>
 

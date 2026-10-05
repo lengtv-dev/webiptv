@@ -1,6 +1,6 @@
 {
-  "name": "App Studio - ระบบสร้างแอพพลิเคชั่น",
-  "description": "ระบบสร้างและออกแบบแอพพลิเคชั่นออนไลน์ พร้อม AI Prompt-to-App, Visual Component Builder, พรีวิวจำลองแอพจริง และฟังก์ชัน Export โค้ด React",
+  "name": "PlayID IPTV Player",
+  "description": "ระบบเครื่องเล่นสตรีมมิ่ง PlayID IPTV Xtream Codes Web Player พร้อมระบบสตรีมพร็อกซี ทีวีสด หนัง ซีรีส์ และรายการโปรด",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

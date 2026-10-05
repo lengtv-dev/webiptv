@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Calendar, Play, Clock, Flame, Radio, Award, ExternalLink } from 'lucide-react';
+import { X, Calendar, Play, Clock, Flame, Radio, Award } from 'lucide-react';
 import { MOCK_SPORTS_FIXTURES } from '../services/api';
 import { SportFixture } from '../types';
 
@@ -53,30 +53,6 @@ export const SportsModal: React.FC<SportsModalProps> = ({
 
         {/* Matches List */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3">
-          {/* Official Sports Schedule Link Banner */}
-          <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-500/20 via-teal-500/15 to-neutral-900 border border-emerald-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
-            <div className="space-y-0.5">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-emerald-400" />
-                <span className="text-sm font-bold text-emerald-300">
-                  ตารางถ่ายทอดสดกีฬาทางการ (Live Sports)
-                </span>
-              </div>
-              <p className="text-xs text-neutral-300">
-                ดูโปรแกรมถ่ายทอดสดฟุตบอลทุกลีกและกีฬาอื่น ๆ ฉบับเต็มได้ที่{' '}
-                <span className="font-semibold text-white underline">https://playid.hstn.me/maintv/tv-ball.html</span>
-              </p>
-            </div>
-            <a
-              href="https://playid.hstn.me/maintv/tv-ball.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20 transition-all shrink-0 active:scale-95"
-            >
-              <span>เปิดตารางกีฬาเต็มหน้าจอ</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </div>
           {MOCK_SPORTS_FIXTURES.map((match: SportFixture) => {
             const isLive = match.status === 'live';
 

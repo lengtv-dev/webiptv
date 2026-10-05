@@ -86,19 +86,19 @@ export const PinModal: React.FC<PinModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md animate-fadeIn">
       <div
         id="pin-modal-container"
-        className="relative w-full max-w-md bg-[#0a0a0a] border border-[#222] rounded-3xl p-6 sm:p-8 shadow-2xl text-neutral-100 space-y-5"
+        className="relative w-full max-w-md bg-neutral-900 border border-neutral-800 rounded-3xl p-6 sm:p-8 shadow-2xl text-neutral-100 space-y-5"
       >
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#D4145A]/15 text-[#D4145A] border border-[#D4145A]/30 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center">
               <ShieldAlert className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-black italic uppercase tracking-tighter text-white">
+              <h2 className="text-lg font-bold text-white">
                 {mode === 'unlock' ? 'การเข้าถึงเนื้อหา 18+' : 'เปลี่ยนรหัสผ่าน PIN'}
               </h2>
-              <p className="text-xs text-[#777] font-medium">
+              <p className="text-xs text-neutral-400">
                 {mode === 'unlock'
                   ? 'ระบบป้องกันด้วยรหัสผ่าน PIN 4 หลัก'
                   : 'ตั้งรหัสความปลอดภัยใหม่สำหรับหมวดหมู่ 18+'}
@@ -108,7 +108,7 @@ export const PinModal: React.FC<PinModalProps> = ({
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#1a1a1a] hover:bg-[#2a2a2a] text-white flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-full bg-neutral-800 hover:bg-neutral-700 text-white flex items-center justify-center"
           >
             <X className="w-4 h-4" />
           </button>
@@ -130,8 +130,8 @@ export const PinModal: React.FC<PinModalProps> = ({
 
         {mode === 'unlock' ? (
           <form onSubmit={handleUnlock} className="space-y-4">
-            <div className="space-y-2 text-center">
-              <label className="text-xs font-bold text-[#888] uppercase tracking-wider block">
+            <div className="space-y-1.5 text-center">
+              <label className="text-xs font-semibold text-neutral-300 block">
                 กรอกรหัส PIN 4 หลัก (ค่าเริ่มต้น 0000)
               </label>
               <input
@@ -142,17 +142,17 @@ export const PinModal: React.FC<PinModalProps> = ({
                 onChange={(e) => setPin(e.target.value)}
                 autoFocus
                 placeholder="••••"
-                className="w-44 mx-auto text-center tracking-[1em] text-2xl font-mono py-2.5 px-4 rounded-2xl bg-[#111] border border-[#222] focus:border-[#FF6321] focus:ring-1 focus:ring-[#FF6321] text-[#FF6321] outline-none"
+                className="w-40 mx-auto text-center tracking-[1em] text-2xl font-mono py-2.5 px-4 rounded-xl bg-neutral-950 border border-neutral-800 focus:border-red-500 focus:ring-1 focus:ring-red-500 text-white outline-none"
               />
             </div>
 
             <button
               id="pin-unlock-submit-btn"
               type="submit"
-              className={`w-full py-3 rounded-2xl font-black uppercase tracking-wider text-xs text-white transition-all shadow-lg ${
+              className={`w-full py-2.5 rounded-xl font-bold text-xs text-white transition-all shadow ${
                 settings.showAdultContent
-                  ? 'bg-[#1a1a1a] hover:bg-[#252525] border border-[#333]'
-                  : 'bg-gradient-to-r from-[#FF6321] to-[#D4145A] hover:opacity-90 shadow-[#FF6321]/20'
+                  ? 'bg-neutral-700 hover:bg-neutral-600'
+                  : 'bg-red-600 hover:bg-red-500 shadow-red-600/30'
               }`}
             >
               {settings.showAdultContent
@@ -160,23 +160,23 @@ export const PinModal: React.FC<PinModalProps> = ({
                 : 'ยืนยันเพื่อปลดล็อกหมวดหมู่ 18+'}
             </button>
 
-            <div className="flex items-center justify-between pt-2 border-t border-[#1a1a1a] text-[11px] text-[#777]">
+            <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] text-neutral-400">
               <button
                 type="button"
                 onClick={() => {
                   setMode('change');
                   setError(null);
                 }}
-                className="hover:text-white flex items-center gap-1 font-bold"
+                className="hover:text-neutral-200 flex items-center gap-1"
               >
-                <KeyRound className="w-3 h-3 text-[#FF6321]" />
+                <KeyRound className="w-3 h-3" />
                 <span>เปลี่ยนรหัส PIN</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleResetPin}
-                className="hover:text-[#FF6321] flex items-center gap-1 font-bold"
+                className="hover:text-amber-400 flex items-center gap-1"
               >
                 <RotateCcw className="w-3 h-3" />
                 <span>รีเซ็ตรหัสเป็น 0000</span>
@@ -186,38 +186,38 @@ export const PinModal: React.FC<PinModalProps> = ({
         ) : (
           <form onSubmit={handleChangePin} className="space-y-3">
             <div className="space-y-1">
-              <label className="text-xs text-[#888] font-bold">รหัส PIN ปัจจุบัน</label>
+              <label className="text-xs text-neutral-300">รหัส PIN ปัจจุบัน</label>
               <input
                 type="password"
                 maxLength={4}
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
                 placeholder="••••"
-                className="w-full text-center tracking-[0.5em] font-mono py-2 rounded-xl bg-[#111] border border-[#222] text-white outline-none focus:border-[#FF6321]"
+                className="w-full text-center tracking-[0.5em] font-mono py-2 rounded-xl bg-neutral-950 border border-neutral-800 text-white outline-none focus:border-emerald-500"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs text-[#888] font-bold">รหัส PIN ใหม่ (4 หลัก)</label>
+              <label className="text-xs text-neutral-300">รหัส PIN ใหม่ (4 หลัก)</label>
               <input
                 type="password"
                 maxLength={4}
                 value={newPin}
                 onChange={(e) => setNewPin(e.target.value)}
                 placeholder="••••"
-                className="w-full text-center tracking-[0.5em] font-mono py-2 rounded-xl bg-[#111] border border-[#222] text-white outline-none focus:border-[#FF6321]"
+                className="w-full text-center tracking-[0.5em] font-mono py-2 rounded-xl bg-neutral-950 border border-neutral-800 text-white outline-none focus:border-emerald-500"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs text-[#888] font-bold">ยืนยันรหัส PIN ใหม่</label>
+              <label className="text-xs text-neutral-300">ยืนยันรหัส PIN ใหม่</label>
               <input
                 type="password"
                 maxLength={4}
                 value={confirmPin}
                 onChange={(e) => setConfirmPin(e.target.value)}
                 placeholder="••••"
-                className="w-full text-center tracking-[0.5em] font-mono py-2 rounded-xl bg-[#111] border border-[#222] text-white outline-none focus:border-[#FF6321]"
+                className="w-full text-center tracking-[0.5em] font-mono py-2 rounded-xl bg-neutral-950 border border-neutral-800 text-white outline-none focus:border-emerald-500"
               />
             </div>
 
@@ -225,13 +225,13 @@ export const PinModal: React.FC<PinModalProps> = ({
               <button
                 type="button"
                 onClick={() => setMode('unlock')}
-                className="flex-1 py-2.5 rounded-xl bg-[#1a1a1a] text-[#aaa] text-xs font-bold hover:bg-[#252525]"
+                className="flex-1 py-2 rounded-xl bg-neutral-800 text-neutral-300 text-xs font-semibold hover:bg-neutral-700"
               >
                 ยกเลิก
               </button>
               <button
                 type="submit"
-                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-[#FF6321] to-[#D4145A] hover:opacity-90 text-white text-xs font-black uppercase tracking-wider shadow"
+                className="flex-1 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 text-xs font-bold shadow"
               >
                 บันทึก PIN ใหม่
               </button>

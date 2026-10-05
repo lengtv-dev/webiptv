@@ -12,7 +12,6 @@ import {
   User,
   LogOut,
   Sparkles,
-  ExternalLink,
 } from 'lucide-react';
 import { XtreamAuthResponse, XtreamCredentials } from '../types';
 import { getM3uPlaylistExportUrl } from '../services/api';
@@ -112,32 +111,26 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Right Actions */}
       <div className="flex items-center gap-1.5 sm:gap-2.5">
         {/* Live Sports Schedule Button */}
-        <a
+        <button
           id="navbar-sports-btn"
-          href="https://playid.hstn.me/maintv/tv-ball.html"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-neutral-800/80 hover:bg-neutral-700 text-neutral-200 text-xs font-semibold border border-neutral-700/80 transition-all shadow-sm group"
-          title="ตารางถ่ายทอดสดกีฬา (https://playid.hstn.me/maintv/tv-ball.html)"
+          onClick={onOpenSports}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-neutral-800/80 hover:bg-neutral-700 text-neutral-200 text-xs font-semibold border border-neutral-700/80 transition-all shadow-sm"
+          title="ตารางถ่ายทอดสดฟุตบอลและกีฬา"
         >
-          <Calendar className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+          <Calendar className="w-3.5 h-3.5 text-emerald-400" />
           <span className="hidden md:inline">ตารางกีฬา</span>
-          <ExternalLink className="w-3 h-3 text-neutral-400 opacity-70 group-hover:opacity-100" />
-        </a>
+        </button>
 
-        {/* Membership Packages Button */}
-        <a
+        {/* VIP Packages Button */}
+        <button
           id="navbar-vip-btn"
-          href="https://playid.hstn.me"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-300 text-xs font-semibold border border-amber-500/40 transition-all shadow-sm group"
-          title="แพ็กเกจสมาชิก (https://playid.hstn.me)"
+          onClick={onOpenVip}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-300 text-xs font-semibold border border-amber-500/40 transition-all shadow-sm"
+          title="ดูแพ็กเกจสมาชิก VIP"
         >
-          <Crown className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
-          <span className="hidden md:inline">แพ็กเกจสมาชิก</span>
-          <ExternalLink className="w-3 h-3 text-amber-400/80 group-hover:opacity-100" />
-        </a>
+          <Crown className="w-3.5 h-3.5 text-amber-400" />
+          <span className="hidden md:inline">แพ็กเกจ VIP</span>
+        </button>
 
         {/* 18+ Adult Content PIN Toggle */}
         <button

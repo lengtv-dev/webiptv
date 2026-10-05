@@ -297,23 +297,23 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
       <div
         ref={containerRef}
         id="video-player-modal-container"
-        className="relative w-full max-w-5xl aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl flex flex-col justify-between border border-[#222] group select-none"
+        className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl flex flex-col justify-between border border-neutral-800 group select-none"
       >
         {/* Top Overlay Bar */}
-        <div className="absolute top-0 inset-x-0 z-30 p-4 bg-gradient-to-b from-black/95 via-black/50 to-transparent flex items-center justify-between opacity-95 group-hover:opacity-100 transition-opacity">
+        <div className="absolute top-0 inset-x-0 z-30 p-4 bg-gradient-to-b from-black/90 via-black/40 to-transparent flex items-center justify-between opacity-95 group-hover:opacity-100 transition-opacity">
           <div className="flex items-center gap-3">
             {isLive ? (
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#FF0055] text-white shadow-lg shadow-[#FF0055]/30 animate-pulse">
-                <span className="w-1.5 h-1.5 rounded-full bg-white" />
+              <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-600 text-white animate-pulse">
+                <span className="w-2 h-2 rounded-full bg-white" />
                 LIVE
               </span>
             ) : (
-              <span className="flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#FF6321]/15 text-[#FF6321] border border-[#FF6321]/30">
-                <Tv className="w-3 h-3" /> VOD
+              <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                <Tv className="w-3.5 h-3.5" /> VOD
               </span>
             )}
 
-            <h2 className="text-white text-sm sm:text-base font-bold truncate max-w-md sm:max-w-xl">
+            <h2 className="text-white text-sm sm:text-base font-semibold truncate max-w-md sm:max-w-xl">
               {title}
             </h2>
           </div>
@@ -322,15 +322,15 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
             {/* Intelligent Stream Proxy Status Indicator */}
             <button
               onClick={() => setUseProxy(!useProxy)}
-              className={`hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-all ${
+              className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-all ${
                 useProxy
-                  ? 'bg-[#FF6321]/10 text-[#FF6321] border-[#FF6321]/30'
-                  : 'bg-[#111] text-[#777] border-[#222]'
+                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                  : 'bg-neutral-800 text-neutral-400 border-neutral-700'
               }`}
               title="สลับโหมด Stream Proxy เพื่อแก้ไขปัญหา HTTPS Mixed Content และ CORS"
             >
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>{useProxy ? 'Stream Proxy' : 'Direct Link'}</span>
+              <span>{useProxy ? 'Stream Proxy เปิดอยู่' : 'Direct Link'}</span>
             </button>
 
             {/* VLC Dropdown */}
@@ -338,37 +338,37 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
               <button
                 id="player-vlc-btn"
                 onClick={() => setShowVlcMenu(!showVlcMenu)}
-                className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#161616] hover:bg-[#222] border border-[#333] text-white text-xs font-black uppercase tracking-wider shadow transition-all"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold shadow transition-all"
                 title="เปิดในโปรแกรมเล่นภายนอก VLC"
               >
                 <span>🎬 VLC</span>
               </button>
 
               {showVlcMenu && (
-                <div className="absolute right-0 top-full mt-2 w-56 bg-[#0e0e0e] border border-[#252525] rounded-2xl shadow-2xl p-2 z-40 space-y-1 text-xs">
+                <div className="absolute right-0 top-full mt-2 w-56 bg-neutral-900 border border-neutral-700 rounded-xl shadow-2xl p-2 z-40 space-y-1 text-xs">
                   <a
                     href={vlcLinks.androidIntent}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-[#1a1a1a] text-[#ddd] transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-neutral-800 text-neutral-200"
                     onClick={() => setShowVlcMenu(false)}
                   >
-                    <ExternalLink className="w-3.5 h-3.5 text-[#FF6321]" />
+                    <ExternalLink className="w-3.5 h-3.5 text-emerald-400" />
                     <span>เปิดด้วย Android VLC App</span>
                   </a>
                   <a
                     href={vlcLinks.iosVlc}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-[#1a1a1a] text-[#ddd] transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-neutral-800 text-neutral-200"
                     onClick={() => setShowVlcMenu(false)}
                   >
-                    <ExternalLink className="w-3.5 h-3.5 text-[#FF6321]" />
+                    <ExternalLink className="w-3.5 h-3.5 text-blue-400" />
                     <span>เปิดด้วย iOS VLC App</span>
                   </a>
                   <a
                     href={vlcLinks.pcM3uBlob}
                     download={`${title.replace(/[^\w\s-]/gi, '_')}.m3u`}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-[#1a1a1a] text-[#ddd] transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-neutral-800 text-neutral-200"
                     onClick={() => setShowVlcMenu(false)}
                   >
-                    <Download className="w-3.5 h-3.5 text-[#FF6321]" />
+                    <Download className="w-3.5 h-3.5 text-amber-400" />
                     <span>ดาวน์โหลด M3U สำหรับ PC / Mac</span>
                   </a>
                 </div>
@@ -379,10 +379,10 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
             <button
               id="player-copy-link-btn"
               onClick={handleCopyLink}
-              className="p-1.5 sm:px-3 sm:py-1 rounded-full bg-[#111] hover:bg-[#1a1a1a] border border-[#222] text-[#888] hover:text-white text-xs flex items-center gap-1 font-bold transition-all"
+              className="p-1.5 sm:px-2.5 sm:py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs flex items-center gap-1 transition-all"
               title="คัดลอกลิงก์สตรีมสด"
             >
-              {copiedLink ? <Check className="w-3.5 h-3.5 text-[#00FF00]" /> : <Share2 className="w-3.5 h-3.5" />}
+              {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5" />}
               <span className="hidden sm:inline">{copiedLink ? 'คัดลอกแล้ว' : 'คัดลอกลิงก์'}</span>
             </button>
 
@@ -390,7 +390,7 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
             <button
               id="video-player-close-btn"
               onClick={onClose}
-              className="w-8 h-8 rounded-full bg-[#1a1a1a] hover:bg-[#252525] border border-[#333] text-white flex items-center justify-center transition-all"
+              className="w-8 h-8 rounded-full bg-neutral-800/80 hover:bg-neutral-700 text-white flex items-center justify-center transition-all"
             >
               <X className="w-4 h-4" />
             </button>
@@ -416,21 +416,21 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
 
           {/* Loading Spinner */}
           {loading && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm z-20">
-              <div className="w-12 h-12 border-4 border-[#FF6321] border-t-transparent rounded-full animate-spin mb-3" />
-              <p className="text-white text-xs font-black uppercase tracking-wider">กำลังเชื่อมต่อสตรีมมิ่งผ่าน Proxy...</p>
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm z-20">
+              <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-3" />
+              <p className="text-white text-sm font-medium">กำลังเชื่อมต่อสตรีมมิ่งผ่าน Proxy...</p>
             </div>
           )}
 
           {/* Error Message */}
           {errorMsg && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 p-6 text-center z-20 space-y-4">
-              <p className="text-red-400 font-bold text-sm max-w-md">{errorMsg}</p>
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/85 p-6 text-center z-20 space-y-4">
+              <p className="text-red-400 font-semibold max-w-md">{errorMsg}</p>
               <div className="flex items-center gap-3">
                 <a
                   href={vlcLinks.pcM3uBlob}
                   download={`${title}.m3u`}
-                  className="px-4 py-2 rounded-full bg-gradient-to-r from-[#FF6321] to-[#D4145A] text-white text-xs font-black uppercase tracking-wider shadow-lg"
+                  className="px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold shadow-lg"
                 >
                   เปิดด้วย VLC บนคอมพิวเตอร์
                 </a>
@@ -438,7 +438,7 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
                   onClick={() => {
                     setUseProxy(!useProxy);
                   }}
-                  className="px-4 py-2 rounded-full bg-[#161616] hover:bg-[#222] border border-[#333] text-white text-xs font-bold"
+                  className="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-semibold"
                 >
                   ลองสลับโหมด {useProxy ? 'Direct' : 'Proxy'}
                 </button>
@@ -448,32 +448,32 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
 
           {/* Prompt: Resume Watching from previous timestamp */}
           {showResumePrompt && (
-            <div className="absolute bottom-20 inset-x-4 sm:inset-x-auto sm:left-6 z-30 p-4 rounded-2xl bg-[#0a0a0a]/95 border border-[#FF6321]/40 shadow-2xl backdrop-blur-md max-w-sm animate-bounce-short">
+            <div className="absolute bottom-20 inset-x-4 sm:inset-x-auto sm:left-6 z-30 p-4 rounded-xl bg-neutral-900/95 border border-emerald-500/40 shadow-2xl backdrop-blur-md max-w-sm animate-bounce-short">
               <div className="flex items-start justify-between gap-3 mb-2">
-                <div className="flex items-center gap-2 text-[#FF6321] text-xs font-black uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-emerald-400 text-sm font-bold">
                   <RotateCcw className="w-4 h-4" />
                   <span>รับชมต่อจากจุดเดิม?</span>
                 </div>
                 <button
                   onClick={() => setShowResumePrompt(false)}
-                  className="text-[#666] hover:text-white text-xs"
+                  className="text-neutral-400 hover:text-white text-xs"
                 >
                   ✕
                 </button>
               </div>
-              <p className="text-xs text-[#aaa] mb-3">
+              <p className="text-xs text-neutral-300 mb-3">
                 คุณได้รับชมค้างไว้ที่นาที {formatSeconds(resumeTimeSeconds)} ต้องการเล่นต่อหรือเริ่มใหม่?
               </p>
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleResume}
-                  className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-[#FF6321] to-[#D4145A] hover:opacity-90 text-white text-xs font-black uppercase tracking-wider transition-all shadow"
+                  className="flex-1 py-1.5 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-neutral-950 text-xs font-bold transition-all shadow"
                 >
                   รับชมต่อ ({formatSeconds(resumeTimeSeconds)})
                 </button>
                 <button
                   onClick={handleRestartFromBeginning}
-                  className="py-2 px-3 rounded-xl bg-[#1a1a1a] hover:bg-[#252525] border border-[#333] text-[#aaa] text-xs font-bold transition-all"
+                  className="py-1.5 px-3 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-medium transition-all"
                 >
                   เริ่มใหม่
                 </button>
@@ -483,14 +483,14 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
 
           {/* Auto Next Episode Notification */}
           {showNextCountdown !== null && (
-            <div className="absolute inset-0 bg-black/85 flex flex-col items-center justify-center z-30 space-y-4">
-              <div className="w-16 h-16 rounded-full bg-[#FF6321]/20 border border-[#FF6321] flex items-center justify-center text-2xl font-black text-[#FF6321]">
+            <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-30 space-y-4">
+              <div className="w-16 h-16 rounded-full bg-purple-600/20 border border-purple-500 flex items-center justify-center text-2xl font-bold text-purple-400">
                 {showNextCountdown}
               </div>
-              <p className="text-white text-sm font-bold">กำลังจะเล่นตอนถัดไปอัตโนมัติ...</p>
+              <p className="text-white text-sm font-medium">กำลังจะเล่นตอนถัดไปอัตโนมัติ...</p>
               <button
                 onClick={() => setShowNextCountdown(null)}
-                className="px-4 py-1.5 rounded-full bg-[#1a1a1a] hover:bg-[#252525] border border-[#333] text-[#aaa] text-xs font-bold"
+                className="px-4 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs"
               >
                 ยกเลิก
               </button>
@@ -509,7 +509,7 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
                 max={duration}
                 value={currentTime}
                 onChange={handleSeek}
-                className="w-full h-1.5 bg-[#222] rounded-lg appearance-none cursor-pointer accent-[#FF6321]"
+                className="w-full h-1.5 bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
               />
             </div>
           )}
@@ -520,14 +520,14 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
               <button
                 id="player-toggle-play-btn"
                 onClick={togglePlay}
-                className="w-10 h-10 rounded-full bg-gradient-to-r from-[#FF6321] to-[#D4145A] text-white flex items-center justify-center hover:opacity-90 transition-all shadow-lg shadow-[#FF6321]/30"
+                className="w-9 h-9 rounded-full bg-white text-neutral-950 flex items-center justify-center hover:bg-neutral-200 transition-all shadow"
               >
                 {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
               </button>
 
               {/* Volume Slider */}
               <div className="flex items-center gap-1.5 group/vol">
-                <button onClick={toggleMute} className="text-[#888] hover:text-white transition-colors">
+                <button onClick={toggleMute} className="text-neutral-300 hover:text-white">
                   {isMuted || volume === 0 ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
                 </button>
                 <input
@@ -537,20 +537,20 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
                   step={0.05}
                   value={isMuted ? 0 : volume}
                   onChange={handleVolumeChange}
-                  className="w-16 sm:w-20 h-1 bg-[#222] rounded-lg appearance-none cursor-pointer accent-[#FF6321]"
+                  className="w-16 sm:w-20 h-1 bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
                 />
               </div>
 
               {/* Time display */}
               {!isLive && duration > 0 && (
-                <span className="text-xs text-[#888] font-mono">
+                <span className="text-xs text-neutral-300 font-mono">
                   {formatSeconds(currentTime)} / {formatSeconds(duration)}
                 </span>
               )}
 
               {isLive && (
-                <span className="text-xs text-[#FF0055] font-black uppercase tracking-wider flex items-center gap-1">
-                  ● LIVE BROADCAST
+                <span className="text-xs text-red-400 font-semibold flex items-center gap-1">
+                  ● สตรีมถ่ายทอดสดแบบ Real-Time
                 </span>
               )}
             </div>
@@ -563,7 +563,7 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
                     const nextEp = extra.allEpisodes![extra.currentEpisodeIndex! + 1];
                     if (onPlayNextEpisode) onPlayNextEpisode(nextEp);
                   }}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-[#FF6321] to-[#D4145A] text-white text-xs font-black uppercase tracking-wider shadow transition-all hover:opacity-90"
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-purple-600/80 hover:bg-purple-500 text-white text-xs font-semibold transition-all"
                   title="เล่นตอนถัดไป"
                 >
                   <span>ตอนถัดไป</span>
@@ -574,7 +574,7 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
               <button
                 id="player-fullscreen-btn"
                 onClick={toggleFullscreen}
-                className="p-2 rounded-full bg-[#1a1a1a] hover:bg-[#252525] border border-[#333] text-white transition-all"
+                className="p-2 rounded-lg bg-neutral-800/80 hover:bg-neutral-700 text-neutral-200 transition-all"
                 title={isFullscreen ? 'ออกจากเต็มจอ' : 'เล่นแบบเต็มจอ (Fullscreen)'}
               >
                 {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}

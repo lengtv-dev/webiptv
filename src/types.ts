@@ -1,151 +1,3 @@
-export type DeviceView = 'mobile' | 'tablet' | 'desktop';
-export type StudioMode = 'builder' | 'preview' | 'code';
-
-export interface AppThemeConfig {
-  id: string;
-  name: string;
-  primaryColor: string;
-  secondaryColor: string;
-  backgroundColor: string;
-  surfaceColor: string;
-  textColor: string;
-  mutedTextColor: string;
-  borderColor: string;
-  accentGradient: string;
-  borderRadius: 'none' | 'rounded-lg' | 'rounded-xl' | 'rounded-2xl' | 'rounded-3xl';
-  fontFamily: 'Plus Jakarta Sans' | 'Kanit' | 'Inter' | 'Poppins';
-}
-
-export type BlockType =
-  | 'navbar'
-  | 'hero'
-  | 'stats'
-  | 'product-grid'
-  | 'card-list'
-  | 'data-table'
-  | 'interactive-form'
-  | 'kanban-board'
-  | 'media-player'
-  | 'pricing-table'
-  | 'review-testimonials'
-  | 'order-cart'
-  | 'cta-banner'
-  | 'faq-accordion'
-  | 'footer';
-
-export interface BlockItem {
-  id: string;
-  title: string;
-  description?: string;
-  price?: number | string;
-  image?: string;
-  badge?: string;
-  tag?: string;
-  icon?: string;
-  status?: string;
-  actionText?: string;
-  rating?: number;
-}
-
-export interface FormField {
-  id: string;
-  label: string;
-  type: 'text' | 'number' | 'email' | 'tel' | 'select' | 'textarea' | 'checkbox';
-  placeholder?: string;
-  required?: boolean;
-  options?: string[];
-  defaultValue?: string;
-}
-
-export interface AppBlockComponent {
-  id: string;
-  type: BlockType;
-  title: string;
-  subtitle?: string;
-  badge?: string;
-  props: {
-    logoText?: string;
-    navLinks?: { label: string; targetPage?: string }[];
-    heroHeadline?: string;
-    heroSubheadline?: string;
-    heroCtaText?: string;
-    heroCtaSecondary?: string;
-    heroImageUrl?: string;
-    items?: BlockItem[];
-    stats?: { label: string; value: string; change?: string; isPositive?: boolean; icon?: string }[];
-    formFields?: FormField[];
-    submitButtonText?: string;
-    formSuccessMessage?: string;
-    tableColumns?: string[];
-    tableRows?: Record<string, string | number>[];
-    mediaUrl?: string;
-    mediaType?: 'video' | 'audio' | 'stream';
-    mediaTitle?: string;
-    kanbanColumns?: { id: string; title: string; items: { id: string; title: string; tag: string }[] }[];
-    pricingTiers?: {
-      id: string;
-      name: string;
-      price: string;
-      period: string;
-      popular?: boolean;
-      features: string[];
-      buttonText: string;
-    }[];
-    faqs?: { question: string; answer: string }[];
-    cartItems?: { id: string; name: string; price: number; quantity: number }[];
-    footerText?: string;
-    footerLinks?: { label: string; url: string }[];
-  };
-  style?: {
-    customBg?: string;
-    customTextColor?: string;
-    padding?: 'small' | 'medium' | 'large';
-    border?: boolean;
-    rounded?: boolean;
-  };
-}
-
-export interface AppPage {
-  id: string;
-  name: string;
-  slug: string;
-  icon: string;
-  components: AppBlockComponent[];
-}
-
-export interface AppProject {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  theme: AppThemeConfig;
-  pages: AppPage[];
-  activePageId: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface AppTemplate {
-  id: string;
-  name: string;
-  nameTh: string;
-  descriptionTh: string;
-  category: string;
-  icon: string;
-  badge: string;
-  project: AppProject;
-}
-
-export interface AiPromptRequest {
-  prompt: string;
-  appType?: string;
-  themePreset?: string;
-}
-
-// ==========================================
-// Compatibility Types for existing IPTV modules
-// ==========================================
-
 export interface XtreamCredentials {
   serverUrl: string;
   username: string;
@@ -215,8 +67,8 @@ export interface VodStream {
   rating_5based?: number;
   added?: string;
   category_id: string;
-  container_extension?: string;
-  custom_sid?: string;
+  container_extension: string;
+  custom_sid?: string | null;
   direct_source?: string;
 }
 
@@ -230,6 +82,7 @@ export interface SeriesItem {
   director?: string;
   genre?: string;
   releaseDate?: string;
+  release_date?: string;
   last_modified?: string;
   rating?: string;
   rating_5based?: number;
@@ -239,36 +92,51 @@ export interface SeriesItem {
   category_id: string;
 }
 
+export interface EpisodeInfo {
+  releasedate?: string;
+  plot?: string;
+  duration_secs?: number;
+  duration?: string;
+  movie_image?: string;
+  rating?: string;
+  season?: string | number;
+  tmdb_id?: string;
+}
+
 export interface Episode {
   id: string | number;
   episode_num: number;
   title: string;
   container_extension: string;
-  info?: {
-    duration?: string;
-    bitrate?: number;
-    plot?: string;
-    releasedate?: string;
-    movie_image?: string;
-  };
+  info?: EpisodeInfo;
+  subtitles?: any[];
   custom_sid?: string;
   added?: string;
   season?: number;
-  direct_source?: string;
-}
-
-export interface Season {
-  id?: string | number;
-  season_num?: number;
-  season_number?: number;
-  name?: string;
-  episode_count?: number;
-  episodes?: Episode[];
 }
 
 export interface SeriesDetails {
-  seasons: Season[];
-  info: any;
+  seasons: Array<{
+    air_date?: string;
+    episode_count?: number;
+    id?: number;
+    name?: string;
+    overview?: string;
+    season_number?: number;
+    cover?: string;
+  }>;
+  info: {
+    name?: string;
+    cover?: string;
+    plot?: string;
+    cast?: string;
+    director?: string;
+    genre?: string;
+    releaseDate?: string;
+    rating?: string;
+    episode_run_time?: string;
+    backdrop_path?: string[];
+  };
   episodes: Record<string, Episode[]>;
 }
 
@@ -277,43 +145,35 @@ export type MediaType = 'live' | 'vod' | 'series';
 export interface FavoriteItem {
   id: string;
   type: MediaType;
-  name?: string;
-  title?: string;
-  streamId: number | string;
-  seriesId?: number | string;
-  icon?: string;
-  poster?: string;
+  title: string;
+  poster: string;
   categoryId?: string;
   categoryName?: string;
-  rating?: string | number;
-  year?: string | number;
-  quality?: string;
-  addedAt?: number;
-  containerExtension?: string;
+  addedAt: number;
+  streamId?: number;
+  seriesId?: number;
   containerExt?: string;
+  rating?: string;
+  year?: string;
+  quality?: string;
 }
 
 export interface WatchHistoryItem {
   id: string;
   type: MediaType;
-  name?: string;
-  title?: string;
-  streamId: number | string;
-  seriesId?: number | string;
+  title: string;
+  poster: string;
+  currentTime: number;
+  duration: number;
+  progressPercent: number;
+  lastWatched: number;
+  streamUrl: string;
+  streamId?: number;
+  seriesId?: number;
   seasonNum?: number;
   episodeNum?: number;
-  icon?: string;
-  poster?: string;
-  containerExt?: string;
-  lastPositionSeconds?: number;
-  durationSeconds?: number;
-  watchedAt?: number;
-  lastWatched?: number;
-  currentTime?: number;
-  duration?: number;
-  progressPercent?: number;
-  streamUrl: string;
   episodeTitle?: string;
+  containerExt?: string;
 }
 
 export interface SportFixture {
@@ -349,6 +209,4 @@ export interface VipPackage {
   features: string[];
   popular?: boolean;
 }
-
-export type ActiveTab = 'live' | 'vod' | 'series' | 'favorites' | 'history';
 

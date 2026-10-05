@@ -39,20 +39,20 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
   return (
     <div className="space-y-6 animate-fadeIn pb-24 md:pb-12">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#1a1a1a]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-800">
         <div>
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-2xl bg-[#FF6321]/15 text-[#FF6321] border border-[#FF6321]/30 flex items-center justify-center shadow-sm">
-              <History className="w-4 h-4" />
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+              <History className="w-5 h-5" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-black italic uppercase tracking-tighter text-white">
-              ประวัติการรับชม <span className="text-[#FF6321]">(Watch History)</span>
+            <h1 className="text-xl sm:text-2xl font-bold text-white">
+              ประวัติการรับชม (Watch History)
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-[#1a1a1a] text-[#aaa] border border-[#222]">
+            <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-neutral-800 text-neutral-300 border border-neutral-700">
               {history.length} รายการ
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-[#777] mt-1 font-medium">
+          <p className="text-xs sm:text-sm text-neutral-400 mt-1">
             บันทึกเวลาที่คุณรับชมค้างไว้ สามารถกดรับชมต่อจากจุดเดิมได้ทันที
           </p>
         </div>
@@ -60,7 +60,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
         {history.length > 0 && (
           <button
             onClick={onClearHistory}
-            className="self-start sm:self-auto flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#111] hover:bg-red-950/60 hover:text-red-400 text-[#888] text-xs font-bold transition-all border border-[#222]"
+            className="self-start sm:self-auto flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-neutral-800/80 hover:bg-red-950 hover:text-red-400 text-neutral-400 text-xs transition-all border border-neutral-700/80"
           >
             <Trash2 className="w-3.5 h-3.5" />
             <span>ล้างประวัติการดูทั้งหมด</span>
@@ -73,7 +73,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
           {history.map((item) => (
             <div
               key={item.id}
-              className="group flex gap-3.5 p-3 rounded-2xl bg-[#111] border border-[#222] hover:border-[#FF6321]/50 transition-all shadow-md relative"
+              className="group flex gap-3.5 p-3 rounded-2xl bg-neutral-900/80 border border-neutral-800 hover:border-neutral-700 transition-all shadow-md relative"
             >
               {/* Thumbnail */}
               <div
@@ -86,7 +86,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
                     episodeId: item.id.replace('series-', ''),
                   })
                 }
-                className="relative w-28 sm:w-36 aspect-video rounded-xl overflow-hidden bg-black flex-shrink-0 cursor-pointer"
+                className="relative w-28 sm:w-36 aspect-video rounded-xl overflow-hidden bg-neutral-950 flex-shrink-0 cursor-pointer"
               >
                 <img
                   src={getProxyImageUrl(item.poster) || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&auto=format&fit=crop&q=60'}
@@ -98,9 +98,9 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
                   <Play className="w-6 h-6 fill-white text-white" />
                 </div>
                 {/* Progress bar overlay on bottom of thumbnail */}
-                <div className="absolute bottom-0 inset-x-0 h-1.5 bg-[#222]">
+                <div className="absolute bottom-0 inset-x-0 h-1 bg-neutral-800">
                   <div
-                    className="h-full bg-gradient-to-r from-[#FF6321] to-[#D4145A]"
+                    className="h-full bg-emerald-500"
                     style={{ width: `${item.progressPercent}%` }}
                   />
                 </div>
@@ -110,12 +110,12 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
               <div className="flex-1 flex flex-col justify-between min-w-0">
                 <div>
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-[#1a1a1a] text-[#FF6321] border border-[#2a2a2a]">
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-neutral-800 text-neutral-300">
                       {item.type === 'series' ? 'ซีรีส์' : item.type === 'live' ? 'ทีวีสด' : 'หนัง VOD'}
                     </span>
                     <button
                       onClick={() => onRemoveItem(item.id)}
-                      className="text-[#555] hover:text-red-400 text-xs p-1"
+                      className="text-neutral-500 hover:text-red-400 text-xs p-1"
                       title="ลบออกจากประวัติ"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -128,20 +128,20 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
                         poster: item.poster,
                       })
                     }
-                    className="text-sm font-bold text-white group-hover:text-[#FF6321] transition-colors mt-1.5 line-clamp-1 cursor-pointer"
+                    className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors mt-1.5 line-clamp-1 cursor-pointer"
                   >
                     {item.title}
                   </h3>
-                  <div className="flex items-center gap-2 text-xs text-[#777] mt-1 font-mono">
-                    <Clock className="w-3.5 h-3.5 text-[#555]" />
+                  <div className="flex items-center gap-2 text-xs text-neutral-400 mt-1">
+                    <Clock className="w-3.5 h-3.5 text-neutral-500" />
                     <span>
                       {formatSeconds(item.currentTime)} / {formatSeconds(item.duration)} ({item.progressPercent}%)
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-2 border-t border-[#1a1a1a] mt-2">
-                  <span className="text-[10px] text-[#666] font-mono">{formatDate(item.lastWatched)}</span>
+                <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 mt-2">
+                  <span className="text-[11px] text-neutral-500">{formatDate(item.lastWatched)}</span>
                   <button
                     onClick={() =>
                       onPlayStream(item.streamUrl, item.title, {
@@ -149,7 +149,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
                         poster: item.poster,
                       })
                     }
-                    className="flex items-center gap-1 text-xs font-bold text-[#FF6321] hover:text-[#ff854f]"
+                    className="flex items-center gap-1 text-xs font-semibold text-emerald-400 hover:text-emerald-300"
                   >
                     <RotateCcw className="w-3 h-3" />
                     <span>รับชมต่อ</span>

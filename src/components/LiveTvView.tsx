@@ -56,43 +56,43 @@ export const LiveTvView: React.FC<LiveTvViewProps> = ({
   return (
     <div className="space-y-5 animate-fadeIn pb-24 md:pb-12">
       {/* Category Pills Header */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-600 shadow-[0_0_10px_#dc2626] animate-pulse" />
-            <h2 className="text-xl sm:text-2xl font-black italic uppercase tracking-tighter text-white">
-              ช่องโทรทัศน์สด <span className="text-[#FF6321]">(Live TV)</span>
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+            <h2 className="text-xl font-bold text-white">
+              ช่องโทรทัศน์สด (Live TV)
             </h2>
-            <span className="text-xs font-mono font-bold text-[#888]">
-              [{filteredStreams.length} CHANNELS]
+            <span className="text-xs text-neutral-400 font-medium">
+              ({filteredStreams.length} ช่อง)
             </span>
           </div>
 
-          {/* Quick channel filter search with pill design */}
-          <div className="relative w-full sm:w-72">
-            <Search className="w-3.5 h-3.5 text-[#666] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          {/* Quick channel filter search */}
+          <div className="relative w-full sm:w-64">
+            <Search className="w-3.5 h-3.5 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               id="livetv-search-filter"
               type="text"
               value={channelSearch}
               onChange={(e) => setChannelSearch(e.target.value)}
-              placeholder="ค้นหาชื่อช่อง เช่น beIN, True, ช่อง 3..."
-              className="w-full pl-9 pr-4 py-2 rounded-full bg-[#111] border border-[#222] text-xs text-[#e0e0e0] placeholder-[#555] outline-none focus:border-[#FF6321] focus:ring-1 focus:ring-[#FF6321] transition-all"
+              placeholder="ค้นหาชื่อช่อง เช่น ช่อง 3, True, beIN..."
+              className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs text-neutral-200 outline-none focus:border-red-500"
             />
           </div>
         </div>
 
-        {/* Categories Horizontal Scroll with pill styling */}
+        {/* Categories Horizontal Scroll */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           <button
             onClick={() => onSelectCategory('all')}
-            className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
               activeCategoryId === 'all'
-                ? 'bg-[#FF6321] text-black shadow-[0_0_15px_rgba(255,99,33,0.35)]'
-                : 'bg-[#111] text-[#888] hover:text-white hover:bg-[#1a1a1a] border border-[#222]'
+                ? 'bg-red-600 text-white shadow-lg shadow-red-600/30 font-bold'
+                : 'bg-neutral-900/80 text-neutral-300 hover:bg-neutral-800 border border-neutral-800'
             }`}
           >
-            ทุกหมวดหมู่ (ALL)
+            ทุกหมวดหมู่ (All)
           </button>
 
           {visibleCategories.map((cat) => {
@@ -101,10 +101,10 @@ export const LiveTvView: React.FC<LiveTvViewProps> = ({
               <button
                 key={cat.category_id}
                 onClick={() => onSelectCategory(cat.category_id)}
-                className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                   isActive
-                    ? 'bg-[#FF6321] text-black shadow-[0_0_15px_rgba(255,99,33,0.35)]'
-                    : 'bg-[#111] text-[#888] hover:text-white hover:bg-[#1a1a1a] border border-[#222]'
+                    ? 'bg-red-600 text-white shadow-lg shadow-red-600/30 font-bold'
+                    : 'bg-neutral-900/80 text-neutral-300 hover:bg-neutral-800 border border-neutral-800'
                 }`}
               >
                 {cat.category_name}
@@ -116,9 +116,9 @@ export const LiveTvView: React.FC<LiveTvViewProps> = ({
 
       {/* Streams Grid */}
       {loading ? (
-        <div className="py-24 flex flex-col items-center justify-center gap-3 text-[#888]">
-          <div className="w-10 h-10 border-3 border-[#FF6321] border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm font-bold uppercase tracking-wider">กำลังโหลดช่องรายการสดจากเซิร์ฟเวอร์...</p>
+        <div className="py-24 flex flex-col items-center justify-center gap-3 text-neutral-400">
+          <div className="w-10 h-10 border-3 border-red-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm font-medium">กำลังโหลดช่องรายการสดจากเซิร์ฟเวอร์...</p>
         </div>
       ) : filteredStreams.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
