@@ -1,9 +1,10 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+import type { Request, Response } from 'express';
 import path from 'path';
-import { createServer as createViteServer } from 'vite';
 
 const app = express();
-const PORT = 3000;
+const isDev = process.env.NODE_ENV === 'development' && !process.env.K_SERVICE?.startsWith('ais-pre');
+const PORT = Number(process.env.DEFAULT_APP_PORT) || 3000;
 
 app.use(express.json());
 
@@ -299,7 +300,8 @@ app.get('/api/playlist/m3u', async (req: Request, res: Response) => {
 });
 
 async function startServer() {
-  if (process.env.NODE_ENV !== 'production') {
+  if (isDev) {
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
@@ -308,6 +310,9 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
+    app.get('/api/*', (req, res) => {
+      res.status(404).json({ error: 'API route not found' });
+    });
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });

@@ -10,6 +10,7 @@ import {
   Info,
   Server,
   Download,
+  ExternalLink,
 } from 'lucide-react';
 import { XtreamAuthResponse, XtreamCredentials } from '../types';
 import { getM3uPlaylistExportUrl } from '../services/api';
@@ -64,7 +65,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       subtitle: 'Bookmarks',
       icon: Heart,
       count: favoritesCount,
-      countColor: 'bg-[#D4145A] text-white shadow-[0_0_10px_rgba(212,20,90,0.4)]',
+      countColor: 'bg-pink-600 text-white shadow-pink-600/40',
     },
     {
       id: 'history' as ActiveTab,
@@ -72,7 +73,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       subtitle: 'Watch History',
       icon: History,
       count: historyCount,
-      countColor: 'bg-[#222] text-[#ccc]',
+      countColor: 'bg-neutral-700 text-neutral-200',
     },
   ];
 
@@ -81,12 +82,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Desktop & Tablet Sidebar */}
       <aside
         id="app-desktop-sidebar"
-        className="hidden md:flex flex-col w-64 h-[calc(100vh-4.5rem)] sticky top-18 bg-[#000] border-r border-[#1a1a1a] p-4 justify-between flex-shrink-0 select-none overflow-y-auto"
+        className="hidden md:flex flex-col w-64 h-[calc(100vh-4rem)] sticky top-16 bg-neutral-900/60 border-r border-neutral-800/80 p-4 justify-between flex-shrink-0 select-none overflow-y-auto"
       >
         <div className="space-y-6">
           {/* Main Navigation */}
-          <div className="space-y-2">
-            <span className="text-[10px] font-black text-[#666] uppercase tracking-widest px-3 mb-2 block">
+          <div className="space-y-1.5">
+            <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider px-3 mb-2 block">
               โหมดความบันเทิงหลัก
             </span>
 
@@ -98,27 +99,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   key={item.id}
                   id={`sidebar-nav-tab-${item.id}`}
                   onClick={() => onSelectTab(item.id)}
-                  className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl font-bold text-sm transition-all group ${
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium text-sm transition-all group ${
                     isActive
-                      ? 'bg-gradient-to-r from-[#FF6321]/20 to-[#D4145A]/15 border border-[#FF6321]/50 text-white shadow-lg shadow-[#FF6321]/15'
-                      : 'text-[#888] hover:text-white hover:bg-[#111]'
+                      ? 'bg-emerald-500 text-neutral-950 font-bold shadow-lg shadow-emerald-500/20'
+                      : 'text-neutral-300 hover:text-white hover:bg-neutral-800/70'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <Icon
-                      className={`w-5 h-5 transition-transform group-hover:scale-105 ${
+                      className={`w-5 h-5 ${
                         isActive
-                          ? 'text-[#FF6321] stroke-[2.5]'
+                          ? 'text-neutral-950 stroke-[2.5]'
                           : item.id === 'favorites'
-                          ? 'text-[#D4145A]'
-                          : 'text-[#666] group-hover:text-white'
+                          ? 'text-pink-400 group-hover:scale-110 transition-transform'
+                          : 'text-neutral-400 group-hover:text-emerald-400 transition-colors'
                       }`}
                     />
                     <div className="text-left leading-tight">
-                      <div className="tracking-tight">{item.label}</div>
+                      <div>{item.label}</div>
                       <div
                         className={`text-[10px] font-normal ${
-                          isActive ? 'text-[#FF6321]' : 'text-[#555]'
+                          isActive ? 'text-neutral-900' : 'text-neutral-500'
                         }`}
                       >
                         {item.subtitle}
@@ -137,7 +138,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
                   {item.badge && (
                     <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-black border ${item.badgeColor}`}
+                      className={`px-1.5 py-0.2 rounded text-[10px] font-bold border ${item.badgeColor}`}
                     >
                       {item.badge}
                     </span>
@@ -148,45 +149,55 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
 
           {/* Secondary Features */}
-          <div className="space-y-1.5 pt-4 border-t border-[#1a1a1a]">
-            <span className="text-[10px] font-black text-[#666] uppercase tracking-widest px-3 mb-2 block">
+          <div className="space-y-1.5 pt-4 border-t border-neutral-800/80">
+            <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider px-3 mb-2 block">
               ฟังก์ชันพิเศษ
             </span>
 
-            <button
+            <a
               id="sidebar-sports-btn"
-              onClick={onOpenSports}
-              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold text-[#aaa] hover:text-white hover:bg-[#111] border border-transparent hover:border-[#222] transition-all group"
+              href="https://playid.hstn.me/maintv/tv-ball.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-neutral-300 hover:text-white hover:bg-neutral-800/70 transition-all group"
             >
-              <Calendar className="w-5 h-5 text-[#FF6321] group-hover:scale-110 transition-transform" />
-              <div className="text-left leading-tight">
-                <div>ตารางถ่ายทอดสดกีฬา</div>
-                <div className="text-[10px] text-[#555]">Live Sports Fixtures</div>
+              <div className="flex items-center gap-3">
+                <Calendar className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
+                <div className="text-left leading-tight">
+                  <div>ตารางถ่ายทอดสดกีฬา</div>
+                  <div className="text-[10px] text-neutral-500">playid.hstn.me/maintv/tv-ball.html</div>
+                </div>
               </div>
-            </button>
+              <ExternalLink className="w-4 h-4 text-neutral-500 group-hover:text-emerald-400 transition-colors" />
+            </a>
 
-            <button
+            <a
               id="sidebar-vip-btn"
-              onClick={onOpenVip}
-              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold text-[#FF6321] hover:text-orange-400 hover:bg-[#FF6321]/10 border border-transparent hover:border-[#FF6321]/30 transition-all group"
+              href="https://playid.hstn.me"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-amber-300 hover:text-amber-200 hover:bg-amber-500/10 transition-all group"
             >
-              <Crown className="w-5 h-5 text-[#FF6321] group-hover:scale-110 transition-transform" />
-              <div className="text-left leading-tight">
-                <div className="font-bold">แพ็กเกจสมาชิก VIP</div>
-                <div className="text-[10px] text-[#FF6321]/70">PromptPay QR Code</div>
+              <div className="flex items-center gap-3">
+                <Crown className="w-5 h-5 text-amber-400 group-hover:scale-110 transition-transform" />
+                <div className="text-left leading-tight">
+                  <div>แพ็กเกจสมาชิก</div>
+                  <div className="text-[10px] text-amber-500/80">playid.hstn.me</div>
+                </div>
               </div>
-            </button>
+              <ExternalLink className="w-4 h-4 text-amber-500/60 group-hover:text-amber-400 transition-colors" />
+            </a>
 
             {creds && (
               <a
                 href={getM3uPlaylistExportUrl(creds)}
                 download="playid_playlist.m3u"
-                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold text-[#aaa] hover:text-white hover:bg-[#111] border border-transparent hover:border-[#222] transition-all group"
+                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-neutral-300 hover:text-white hover:bg-neutral-800/70 transition-all group"
               >
-                <Download className="w-5 h-5 text-[#00FF00] group-hover:scale-110 transition-transform" />
+                <Download className="w-5 h-5 text-blue-400 group-hover:scale-110 transition-transform" />
                 <div className="text-left leading-tight">
                   <div>ส่งออกเพลย์ลิสต์ M3U</div>
-                  <div className="text-[10px] text-[#555]">สำหรับ VLC / Smarters</div>
+                  <div className="text-[10px] text-neutral-500">สำหรับ VLC / Smarters</div>
                 </div>
               </a>
             )}
@@ -194,21 +205,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Server & Connection Health Card */}
-        <div className="pt-4 border-t border-[#1a1a1a] space-y-2 text-xs">
-          <div className="p-3.5 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] space-y-2">
-            <div className="flex items-center justify-between text-[#888]">
-              <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[10px]">
-                <Server className="w-3.5 h-3.5 text-[#00FF00]" />
+        <div className="pt-4 border-t border-neutral-800/80 space-y-2 text-xs">
+          <div className="p-3 rounded-xl bg-neutral-950/70 border border-neutral-800/80 space-y-1.5">
+            <div className="flex items-center justify-between text-neutral-400">
+              <span className="flex items-center gap-1.5">
+                <Server className="w-3.5 h-3.5 text-emerald-400" />
                 เซิร์ฟเวอร์
               </span>
-              <span className="w-2 h-2 rounded-full bg-[#00FF00] shadow-[0_0_8px_#00FF00] animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
-            <p className="text-[11px] font-mono text-[#00FF00] truncate">
-              {creds?.server_url || '103.114.203.129:8080'}
+            <p className="text-[11px] font-mono text-neutral-300 truncate">
+              {creds?.serverUrl || '103.114.203.129:8080'}
             </p>
-            <div className="flex items-center justify-between text-[11px] text-[#777] pt-1.5 border-t border-[#161616]">
+            <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-1 border-t border-neutral-900">
               <span>สถานะบัญชี</span>
-              <span className="text-[#FF6321] font-mono font-bold">
+              <span className="text-emerald-400 font-semibold">
                 {authData?.user_info?.status || 'Active VIP'}
               </span>
             </div>
@@ -219,7 +230,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Mobile Bottom Navigation (Responsive Tab Bar) */}
       <nav
         id="mobile-bottom-nav"
-        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#000]/95 backdrop-blur-xl border-t border-[#1a1a1a] px-2 py-2 flex items-center justify-around select-none shadow-2xl"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-neutral-900/95 backdrop-blur-lg border-t border-neutral-800 px-2 py-1.5 flex items-center justify-around select-none"
       >
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -230,13 +241,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
               id={`mobile-nav-tab-${item.id}`}
               onClick={() => onSelectTab(item.id)}
               className={`relative flex flex-col items-center justify-center p-1.5 rounded-xl transition-all ${
-                isActive ? 'text-[#FF6321] font-bold' : 'text-[#777] hover:text-[#bbb]'
+                isActive ? 'text-emerald-400 font-bold' : 'text-neutral-400 hover:text-neutral-200'
               }`}
             >
               <div className="relative">
                 <Icon className="w-5 h-5" />
                 {item.count !== undefined && item.count > 0 && (
-                  <span className="absolute -top-1.5 -right-2 px-1.5 py-0.2 rounded-full text-[10px] font-black bg-[#D4145A] text-white">
+                  <span className="absolute -top-1.5 -right-2 px-1.5 py-0.2 rounded-full text-[10px] font-extrabold bg-pink-600 text-white">
                     {item.count}
                   </span>
                 )}

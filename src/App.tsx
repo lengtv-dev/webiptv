@@ -1,427 +1,386 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Category,
-  FavoriteItem,
-  LiveStream,
-  MediaType,
-  SeriesItem,
-  VodStream,
-  WatchHistoryItem,
-  XtreamAuthResponse,
-  XtreamCredentials,
+  AppBlockComponent,
+  AppProject,
+  AppThemeConfig,
+  DeviceView,
+  StudioMode,
 } from './types';
 import {
-  authenticateXtream,
-  getLiveCategories,
-  getLiveStreams,
-  getSeriesCategories,
-  getSeriesStreams,
-  getVodCategories,
-  getVodStreams,
-} from './services/api';
-import {
-  DEFAULT_CREDENTIALS,
-  FAVORITES_UPDATED_EVENT,
-  HISTORY_UPDATED_EVENT,
-  getFavorites,
-  getSettings,
-  getStoredCredentials,
-  getWatchHistory,
-  saveFavorites,
-  saveSettings,
-  saveStoredCredentials,
-  toggleFavorite,
-  clearWatchHistory,
-  removeHistoryItem,
-} from './utils/storage';
-import { Navbar } from './components/Navbar';
-import { Sidebar, ActiveTab } from './components/Sidebar';
-import { LiveTvView } from './components/LiveTvView';
-import { VodView } from './components/VodView';
-import { SeriesView } from './components/SeriesView';
-import { FavoritesView } from './components/FavoritesView';
-import { HistoryView } from './components/HistoryView';
-import { VideoPlayerModal } from './components/VideoPlayerModal';
-import { InfoModal } from './components/InfoModal';
-import { LoginModal } from './components/LoginModal';
-import { SportsModal } from './components/SportsModal';
-import { VipModal } from './components/VipModal';
-import { PinModal } from './components/PinModal';
+  getActiveProjectId,
+  getSavedProjects,
+  saveProjects,
+  setActiveProjectId,
+  generateReactCode,
+  createDefaultBlock,
+} from './services/appGenerator';
+import { THEME_PRESETS, APP_TEMPLATES } from './data/templates';
+import { StudioNavbar } from './components/StudioNavbar';
+import { ComponentPalette } from './components/ComponentPalette';
+import { CanvasRenderer } from './components/CanvasRenderer';
+import { PropertyInspector } from './components/PropertyInspector';
+import { AiGeneratorModal } from './components/AiGeneratorModal';
+import { TemplateSelectorModal } from './components/TemplateSelectorModal';
+import { ThemeModal } from './components/ThemeModal';
+import { CodeExportModal } from './components/CodeExportModal';
+import { Copy, Download, Check } from 'lucide-react';
 
 export default function App() {
-  // 1. App State
-  const [creds, setCreds] = useState<XtreamCredentials>(() => {
-    return getStoredCredentials() || DEFAULT_CREDENTIALS;
-  });
-  const [authData, setAuthData] = useState<XtreamAuthResponse | null>(null);
-  const [activeTab, setActiveTab] = useState<ActiveTab>('live');
-  const [globalSearch, setGlobalSearch] = useState('');
-  const [settings, setAppSettings] = useState(() => getSettings());
+  const [projects, setProjects] = useState<AppProject[]>(() => getSavedProjects());
+  const [activeProjectId, setCurrentActiveId] = useState<string>(() => getActiveProjectId());
+  const [mode, setMode] = useState<StudioMode>('builder');
+  const [deviceView, setDeviceView] = useState<DeviceView>('desktop');
+  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
-  // Favorites & Watch History reactive states
-  const [favorites, setFavorites] = useState<FavoriteItem[]>(() => getFavorites());
-  const [watchHistory, setWatchHistory] = useState<WatchHistoryItem[]>(() => getWatchHistory());
+  // Modals
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+  const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState(false);
+  const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
-  // Data collections
-  const [liveCategories, setLiveCategories] = useState<Category[]>([]);
-  const [vodCategories, setVodCategories] = useState<Category[]>([]);
-  const [seriesCategories, setSeriesCategories] = useState<Category[]>([]);
+  // Code view copy state
+  const [copiedCode, setCopiedCode] = useState(false);
 
-  const [liveStreams, setLiveStreams] = useState<LiveStream[]>([]);
-  const [vodStreams, setVodStreams] = useState<VodStream[]>([]);
-  const [seriesStreams, setSeriesStreams] = useState<SeriesItem[]>([]);
+  // Current active project
+  const currentProject = projects.find((p) => p.id === activeProjectId) || projects[0] || APP_TEMPLATES[0].project;
+  const activePage = currentProject.pages.find((p) => p.id === currentProject.activePageId) || currentProject.pages[0];
 
-  const [activeCategoryId, setActiveCategoryId] = useState<string>('all');
-  const [loadingData, setLoadingData] = useState(false);
-
-  // Modals state
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isSportsOpen, setIsSportsOpen] = useState(false);
-  const [isVipOpen, setIsVipOpen] = useState(false);
-  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
-
-  // Video Player state
-  const [playerState, setPlayerState] = useState<{
-    isOpen: boolean;
-    streamUrl: string;
-    title: string;
-    extra?: any;
-  }>({
-    isOpen: false,
-    streamUrl: '',
-    title: '',
-  });
-
-  // Info Modal state
-  const [infoModalState, setInfoModalState] = useState<{
-    isOpen: boolean;
-    type: MediaType;
-    item: any;
-  }>({
-    isOpen: false,
-    type: 'vod',
-    item: null,
-  });
-
-  // Listen to cross-component localStorage events
+  // Auto-save projects when currentProject changes
   useEffect(() => {
-    const handleFavUpdated = (e: any) => {
-      setFavorites(e.detail || getFavorites());
-    };
-    const handleHistoryUpdated = (e: any) => {
-      setWatchHistory(e.detail || getWatchHistory());
-    };
-
-    window.addEventListener(FAVORITES_UPDATED_EVENT, handleFavUpdated);
-    window.addEventListener(HISTORY_UPDATED_EVENT, handleHistoryUpdated);
-
-    return () => {
-      window.removeEventListener(FAVORITES_UPDATED_EVENT, handleFavUpdated);
-      window.removeEventListener(HISTORY_UPDATED_EVENT, handleHistoryUpdated);
-    };
-  }, []);
-
-  // Theme synchronization
-  useEffect(() => {
-    if (settings.theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [settings.theme]);
-
-  // Initial Auth & Data Load
-  const initApp = useCallback(async (credentials: XtreamCredentials) => {
-    setLoadingData(true);
-    try {
-      const auth = await authenticateXtream(credentials);
-      setAuthData(auth);
-      saveStoredCredentials(credentials);
-
-      // Load initial categories
-      const [liveCats, vodCats, seriesCats] = await Promise.all([
-        getLiveCategories(credentials),
-        getVodCategories(credentials),
-        getSeriesCategories(credentials),
-      ]);
-
-      setLiveCategories(liveCats);
-      setVodCategories(vodCats);
-      setSeriesCategories(seriesCats);
-
-      // Load initial live streams
-      const initialStreams = await getLiveStreams(credentials);
-      setLiveStreams(initialStreams);
-    } catch (err) {
-      console.warn('Authentication or data fetch error:', err);
-    } finally {
-      setLoadingData(false);
-    }
-  }, []);
+    saveProjects(projects);
+  }, [projects]);
 
   useEffect(() => {
-    initApp(creds);
-  }, []);
+    setActiveProjectId(activeProjectId);
+  }, [activeProjectId]);
 
-  // Load content when tab or category changes
-  useEffect(() => {
-    if (!creds) return;
-
-    const loadTabContent = async () => {
-      setLoadingData(true);
-      try {
-        if (activeTab === 'live') {
-          const streams = await getLiveStreams(creds, activeCategoryId);
-          setLiveStreams(streams);
-        } else if (activeTab === 'vod') {
-          const streams = await getVodStreams(creds, activeCategoryId);
-          setVodStreams(streams);
-        } else if (activeTab === 'series') {
-          const series = await getSeriesStreams(creds, activeCategoryId);
-          setSeriesStreams(series);
-        }
-      } catch (err) {
-        console.error('Error fetching tab data:', err);
-      } finally {
-        setLoadingData(false);
-      }
-    };
-
-    if (activeTab === 'live' || activeTab === 'vod' || activeTab === 'series') {
-      loadTabContent();
-    }
-  }, [activeTab, activeCategoryId, creds]);
-
-  // Handle Tab Switch
-  const handleSelectTab = (tab: ActiveTab) => {
-    setActiveTab(tab);
-    setActiveCategoryId('all');
-    setGlobalSearch('');
-  };
-
-  // Toggle Favorite handler
-  const handleToggleFavorite = (e: React.MouseEvent, item: FavoriteItem) => {
-    e.stopPropagation();
-    toggleFavorite(item);
-  };
-
-  // Play Stream handler
-  const handlePlayStream = (streamUrl: string, title: string, extra?: any) => {
-    setPlayerState({
-      isOpen: true,
-      streamUrl,
-      title,
-      extra,
-    });
-  };
-
-  // Open Info Modal handler
-  const handleOpenInfo = (item: any, type: MediaType) => {
-    setInfoModalState({
-      isOpen: true,
-      type,
-      item,
-    });
-  };
-
-  // Open Channel directly from Sports fixtures
-  const handleWatchSportsChannel = (channelName: string) => {
-    setActiveTab('live');
-    setGlobalSearch(channelName);
-    // Find matching stream
-    const found = liveStreams.find((s) =>
-      s.name.toLowerCase().includes(channelName.toLowerCase())
+  // Update current project helper
+  const updateProject = (updater: (prev: AppProject) => AppProject) => {
+    setProjects((all) =>
+      all.map((p) => (p.id === currentProject.id ? updater(p) : p))
     );
-    if (found) {
-      handlePlayStream(`/api/proxy/stream?url=...`, found.name, {
-        type: 'live',
-        streamId: found.stream_id,
-        poster: found.stream_icon,
+  };
+
+  // Add component block to active page
+  const handleAddComponent = (newBlock: AppBlockComponent) => {
+    updateProject((prev) => {
+      const pages = prev.pages.map((page) => {
+        if (page.id === prev.activePageId || page.id === prev.pages[0].id) {
+          return {
+            ...page,
+            components: [...page.components, newBlock],
+          };
+        }
+        return page;
       });
+      return { ...prev, pages, updatedAt: new Date().toISOString() };
+    });
+    setSelectedBlockId(newBlock.id);
+  };
+
+  // Move component up or down
+  const handleMoveBlock = (id: string, direction: 'up' | 'down') => {
+    updateProject((prev) => {
+      const pages = prev.pages.map((page) => {
+        if (page.id === prev.activePageId || page.id === prev.pages[0].id) {
+          const comps = [...page.components];
+          const idx = comps.findIndex((c) => c.id === id);
+          if (idx < 0) return page;
+          const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+          if (targetIdx < 0 || targetIdx >= comps.length) return page;
+
+          const temp = comps[idx];
+          comps[idx] = comps[targetIdx];
+          comps[targetIdx] = temp;
+          return { ...page, components: comps };
+        }
+        return page;
+      });
+      return { ...prev, pages };
+    });
+  };
+
+  // Duplicate component
+  const handleDuplicateBlock = (id: string) => {
+    updateProject((prev) => {
+      const pages = prev.pages.map((page) => {
+        if (page.id === prev.activePageId || page.id === prev.pages[0].id) {
+          const comps = [...page.components];
+          const idx = comps.findIndex((c) => c.id === id);
+          if (idx < 0) return page;
+          const cloned: AppBlockComponent = JSON.parse(JSON.stringify(comps[idx]));
+          cloned.id = `block-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+          cloned.title = `${cloned.title} (สำเนา)`;
+          comps.splice(idx + 1, 0, cloned);
+          return { ...page, components: comps };
+        }
+        return page;
+      });
+      return { ...prev, pages };
+    });
+  };
+
+  // Delete component
+  const handleDeleteBlock = (id: string) => {
+    updateProject((prev) => {
+      const pages = prev.pages.map((page) => {
+        if (page.id === prev.activePageId || page.id === prev.pages[0].id) {
+          return {
+            ...page,
+            components: page.components.filter((c) => c.id !== id),
+          };
+        }
+        return page;
+      });
+      return { ...prev, pages };
+    });
+    if (selectedBlockId === id) {
+      setSelectedBlockId(null);
     }
   };
 
-  // Theme Toggle
-  const handleToggleTheme = () => {
-    const nextTheme = settings.theme === 'dark' ? 'light' : 'dark';
-    const updated = saveSettings({ theme: nextTheme });
-    setAppSettings(updated);
+  // Update component properties
+  const handleUpdateBlock = (updated: AppBlockComponent) => {
+    updateProject((prev) => {
+      const pages = prev.pages.map((page) => {
+        if (page.id === prev.activePageId || page.id === prev.pages[0].id) {
+          return {
+            ...page,
+            components: page.components.map((c) => (c.id === updated.id ? updated : c)),
+          };
+        }
+        return page;
+      });
+      return { ...prev, pages };
+    });
   };
 
-  // Update Settings
-  const handleUpdateSettings = (partial: Partial<typeof settings>) => {
-    const updated = saveSettings(partial);
-    setAppSettings(updated);
+  // Add page
+  const handleAddPage = (name: string) => {
+    const newPage = {
+      id: `page-${Date.now()}`,
+      name,
+      slug: `/${name.toLowerCase().replace(/\s+/g, '-')}`,
+      icon: 'FileText',
+      components: [createDefaultBlock('navbar'), createDefaultBlock('footer')],
+    };
+
+    updateProject((prev) => ({
+      ...prev,
+      pages: [...prev.pages, newPage],
+      activePageId: newPage.id,
+    }));
   };
+
+  // Delete page
+  const handleDeletePage = (pageId: string) => {
+    if (currentProject.pages.length <= 1) return;
+    updateProject((prev) => {
+      const newPages = prev.pages.filter((p) => p.id !== pageId);
+      return {
+        ...prev,
+        pages: newPages,
+        activePageId: newPages[0].id,
+      };
+    });
+  };
+
+  // Switch active page
+  const handleSelectPage = (pageId: string) => {
+    updateProject((prev) => ({
+      ...prev,
+      activePageId: pageId,
+    }));
+    setSelectedBlockId(null);
+  };
+
+  // Create new project
+  const handleNewProject = () => {
+    const newProj: AppProject = {
+      id: `proj-${Date.now()}`,
+      name: 'แอพใหม่ของฉัน',
+      description: 'แอพพลิเคชั่นสร้างด้วย App Studio',
+      category: 'General',
+      theme: THEME_PRESETS[0],
+      activePageId: 'page-home',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      pages: [
+        {
+          id: 'page-home',
+          name: 'หน้าแรก',
+          slug: '/',
+          icon: 'Home',
+          components: [
+            createDefaultBlock('navbar'),
+            createDefaultBlock('hero'),
+            createDefaultBlock('stats'),
+            createDefaultBlock('product-grid'),
+            createDefaultBlock('footer'),
+          ],
+        },
+      ],
+    };
+    setProjects((prev) => [newProj, ...prev]);
+    setCurrentActiveId(newProj.id);
+  };
+
+  // Select project from switcher
+  const handleSelectProject = (id: string) => {
+    setCurrentActiveId(id);
+    setSelectedBlockId(null);
+  };
+
+  // Apply template
+  const handleSelectTemplate = (templateProj: AppProject) => {
+    setProjects((prev) => [templateProj, ...prev]);
+    setCurrentActiveId(templateProj.id);
+    setSelectedBlockId(null);
+  };
+
+  // Select theme
+  const handleSelectTheme = (theme: AppThemeConfig) => {
+    updateProject((prev) => ({
+      ...prev,
+      theme,
+    }));
+  };
+
+  // Find currently selected block
+  const selectedBlock = activePage?.components?.find((c) => c.id === selectedBlockId) || null;
 
   return (
-    <div className={`min-h-screen ${settings.theme === 'dark' ? 'bg-[#050505] text-[#FAFAFA]' : 'bg-neutral-100 text-neutral-900'} flex flex-col font-sans transition-colors duration-300`}>
+    <div className="h-screen w-screen flex flex-col bg-[#050505] text-[#FAFAFA] font-sans overflow-hidden">
       {/* Top Navbar */}
-      <Navbar
-        creds={creds}
-        authData={authData}
-        searchQuery={globalSearch}
-        onSearchChange={setGlobalSearch}
-        onOpenSports={() => setIsSportsOpen(true)}
-        onOpenVip={() => setIsVipOpen(true)}
-        onOpenPinModal={() => setIsPinModalOpen(true)}
-        onOpenLogin={() => setIsLoginOpen(true)}
-        onLogout={() => setIsLoginOpen(true)}
-        showAdultContent={settings.showAdultContent}
-        theme={settings.theme}
-        onToggleTheme={handleToggleTheme}
+      <StudioNavbar
+        project={currentProject}
+        savedProjects={projects}
+        mode={mode}
+        onSetMode={setMode}
+        deviceView={deviceView}
+        onSetDeviceView={setDeviceView}
+        onSelectProject={handleSelectProject}
+        onNewProject={handleNewProject}
+        onOpenAiModal={() => setIsAiModalOpen(true)}
+        onOpenTemplatesModal={() => setIsTemplatesModalOpen(true)}
+        onOpenThemeModal={() => setIsThemeModalOpen(true)}
+        onOpenExportModal={() => setIsExportModalOpen(true)}
       />
 
-      {/* Main Layout Body */}
-      <div className="flex-1 flex max-w-[1920px] w-full mx-auto">
-        {/* Left Sidebar */}
-        <Sidebar
-          activeTab={activeTab}
-          onSelectTab={handleSelectTab}
-          favoritesCount={favorites.length}
-          historyCount={watchHistory.length}
-          onOpenSports={() => setIsSportsOpen(true)}
-          onOpenVip={() => setIsVipOpen(true)}
-          authData={authData}
-          creds={creds}
-        />
+      {/* Main Workspace Area */}
+      <div className="flex-1 flex overflow-hidden relative">
+        {mode === 'code' ? (
+          /* Code View Mode */
+          <div className="flex-1 flex flex-col bg-[#0a0a0a] p-6 overflow-hidden">
+            <div className="max-w-6xl mx-auto w-full flex-1 flex flex-col space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-black text-white">โค้ด React Component</h2>
+                  <p className="text-xs text-neutral-400">
+                    โค้ดคอมโพเนนต์ React 18+ พร้อม Tailwind CSS สำหรับโปรเจกต์ "{currentProject.name}"
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(generateReactCode(currentProject));
+                      setCopiedCode(true);
+                      setTimeout(() => setCopiedCode(false), 2000);
+                    }}
+                    className="px-4 py-2 rounded-xl bg-[#1a1a1a] hover:bg-[#252525] border border-[#333] text-xs font-bold text-white flex items-center gap-2 transition-colors"
+                  >
+                    {copiedCode ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedCode ? 'คัดลอกแล้ว!' : 'คัดลอกโค้ด'}</span>
+                  </button>
+                  <button
+                    onClick={() => setIsExportModalOpen(true)}
+                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#FF6321] to-[#D4145A] text-xs font-bold text-white flex items-center gap-2 shadow-lg hover:opacity-90"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>ดาวน์โหลดไฟล์</span>
+                  </button>
+                </div>
+              </div>
 
-        {/* Content Area */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto max-w-full">
-          {activeTab === 'live' && (
-            <LiveTvView
-              categories={liveCategories}
-              streams={liveStreams}
-              activeCategoryId={activeCategoryId}
-              onSelectCategory={setActiveCategoryId}
-              onPlayStream={handlePlayStream}
-              favorites={favorites}
-              onToggleFavorite={handleToggleFavorite}
-              creds={creds}
-              searchQuery={globalSearch}
-              loading={loadingData}
-              showAdultContent={settings.showAdultContent}
-            />
-          )}
+              <div className="flex-1 rounded-2xl bg-[#0e0e0e] border border-[#222222] p-5 overflow-auto custom-scrollbar font-mono text-xs text-neutral-300">
+                <pre>
+                  <code>{generateReactCode(currentProject)}</code>
+                </pre>
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* Builder & Preview Mode */
+          <>
+            {/* Left Component Palette (Visible in Builder Mode) */}
+            {mode === 'builder' && (
+              <ComponentPalette
+                pages={currentProject.pages}
+                activePageId={currentProject.activePageId}
+                onSelectPage={handleSelectPage}
+                onAddPage={handleAddPage}
+                onDeletePage={handleDeletePage}
+                onAddComponent={handleAddComponent}
+                activeComponentsCount={activePage?.components?.length || 0}
+              />
+            )}
 
-          {activeTab === 'vod' && (
-            <VodView
-              categories={vodCategories}
-              streams={vodStreams}
-              activeCategoryId={activeCategoryId}
-              onSelectCategory={setActiveCategoryId}
-              onPlayStream={handlePlayStream}
-              onOpenInfo={handleOpenInfo}
-              favorites={favorites}
-              onToggleFavorite={handleToggleFavorite}
-              creds={creds}
-              searchQuery={globalSearch}
-              loading={loadingData}
-              showAdultContent={settings.showAdultContent}
+            {/* Canvas Area */}
+            <CanvasRenderer
+              project={currentProject}
+              mode={mode}
+              deviceView={deviceView}
+              selectedBlockId={selectedBlockId}
+              onSelectBlock={setSelectedBlockId}
+              onMoveBlock={handleMoveBlock}
+              onDuplicateBlock={handleDuplicateBlock}
+              onDeleteBlock={handleDeleteBlock}
+              onAddBlockPrompt={() => handleAddComponent(createDefaultBlock('hero'))}
+              onSwitchPage={handleSelectPage}
             />
-          )}
 
-          {activeTab === 'series' && (
-            <SeriesView
-              categories={seriesCategories}
-              series={seriesStreams}
-              activeCategoryId={activeCategoryId}
-              onSelectCategory={setActiveCategoryId}
-              onOpenInfo={handleOpenInfo}
-              favorites={favorites}
-              onToggleFavorite={handleToggleFavorite}
-              creds={creds}
-              searchQuery={globalSearch}
-              loading={loadingData}
-              showAdultContent={settings.showAdultContent}
-            />
-          )}
-
-          {activeTab === 'favorites' && (
-            <FavoritesView
-              favorites={favorites}
-              creds={creds}
-              onPlayStream={handlePlayStream}
-              onOpenInfo={handleOpenInfo}
-              onToggleFavorite={handleToggleFavorite}
-              onClearAll={() => saveFavorites([])}
-            />
-          )}
-
-          {activeTab === 'history' && (
-            <HistoryView
-              history={watchHistory}
-              onPlayStream={handlePlayStream}
-              onClearHistory={clearWatchHistory}
-              onRemoveItem={removeHistoryItem}
-            />
-          )}
-        </main>
+            {/* Right Property Inspector (Visible in Builder Mode) */}
+            {mode === 'builder' && (
+              <PropertyInspector
+                selectedBlock={selectedBlock}
+                onClose={() => setSelectedBlockId(null)}
+                onUpdateBlock={handleUpdateBlock}
+                theme={currentProject.theme}
+              />
+            )}
+          </>
+        )}
       </div>
 
-      {/* Video Player Modal */}
-      <VideoPlayerModal
-        isOpen={playerState.isOpen}
-        onClose={() => setPlayerState((prev) => ({ ...prev, isOpen: false }))}
-        streamUrl={playerState.streamUrl}
-        title={playerState.title}
-        creds={creds}
-        extra={playerState.extra}
-        onPlayNextEpisode={(nextEp) => {
-          if (!playerState.extra?.seriesId) return;
-          const nextUrl = `/api/proxy/stream?url=...`;
-          handlePlayStream(nextUrl, `${playerState.title.split('-')[0]} - ${nextEp.title}`, {
-            ...playerState.extra,
-            episodeId: nextEp.id,
-            episodeNum: nextEp.episode_num,
-            currentEpisodeIndex: (playerState.extra.currentEpisodeIndex || 0) + 1,
-          });
+      {/* Modals */}
+      <AiGeneratorModal
+        isOpen={isAiModalOpen}
+        onClose={() => setIsAiModalOpen(false)}
+        onAppGenerated={(genProj) => {
+          setProjects((prev) => [genProj, ...prev]);
+          setCurrentActiveId(genProj.id);
+          setSelectedBlockId(null);
         }}
       />
 
-      {/* Info Modal (Movie / Series Details) */}
-      <InfoModal
-        isOpen={infoModalState.isOpen}
-        onClose={() => setInfoModalState((prev) => ({ ...prev, isOpen: false }))}
-        type={infoModalState.type}
-        item={infoModalState.item}
-        creds={creds}
-        onPlayStream={handlePlayStream}
-        onFavoritesChanged={() => setFavorites(getFavorites())}
+      <TemplateSelectorModal
+        isOpen={isTemplatesModalOpen}
+        onClose={() => setIsTemplatesModalOpen(false)}
+        onSelectTemplate={handleSelectTemplate}
+        currentProjectId={currentProject.id}
       />
 
-      {/* Glassmorphism Login Modal */}
-      <LoginModal
-        isOpen={isLoginOpen}
-        onClose={() => setIsLoginOpen(false)}
-        defaultCreds={creds}
-        onLoginSuccess={(newCreds, newAuth) => {
-          setCreds(newCreds);
-          setAuthData(newAuth);
-          initApp(newCreds);
-        }}
+      <ThemeModal
+        isOpen={isThemeModalOpen}
+        onClose={() => setIsThemeModalOpen(false)}
+        currentTheme={currentProject.theme}
+        onSelectTheme={handleSelectTheme}
       />
 
-      {/* Sports Fixtures Modal */}
-      <SportsModal
-        isOpen={isSportsOpen}
-        onClose={() => setIsSportsOpen(false)}
-        onWatchChannel={handleWatchSportsChannel}
-      />
-
-      {/* VIP Membership Modal */}
-      <VipModal
-        isOpen={isVipOpen}
-        onClose={() => setIsVipOpen(false)}
-        currentUsername={creds?.username}
-      />
-
-      {/* 18+ PIN Protection Modal */}
-      <PinModal
-        isOpen={isPinModalOpen}
-        onClose={() => setIsPinModalOpen(false)}
-        settings={settings}
-        onUpdateSettings={handleUpdateSettings}
+      <CodeExportModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        project={currentProject}
       />
     </div>
   );
